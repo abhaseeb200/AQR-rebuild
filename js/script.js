@@ -511,11 +511,113 @@
   }
 
   /* =========================================================
-     2. SMILE GALLERY — filters + case modal
+     2. SMILE GALLERY — filters + comparison sliders + case modal
   ========================================================= */
   var filtersEl = document.getElementById('galleryFilters');
   var galleryGrid = document.getElementById('galleryGrid');
   var caseCards = galleryGrid ? Array.prototype.slice.call(galleryGrid.querySelectorAll('.case-card')) : [];
+
+  // Initialize all comparison sliders (both on cards and in modal)
+  function initComparisonSliders() {
+    var sliders = document.querySelectorAll('.comparison-slider');
+
+    sliders.forEach(function (slider) {
+      if (slider.dataset.sliderReady === 'true') return;
+      slider.dataset.sliderReady = 'true';
+
+      var handle = slider.querySelector('.comparison-slider__handle');
+      var hint = slider.querySelector('.comparison-slider__hint');
+      var isDragging = false;
+
+      function setPosition(clientX) {
+        var rect = slider.getBoundingClientRect();
+        if (rect.width <= 0) return;
+        var x = clientX - rect.left;
+        var pct = Math.max(0, Math.min(100, (x / rect.width) * 100));
+        slider.style.setProperty('--pos', pct + '%');
+        if (handle) {
+          handle.setAttribute('aria-valuenow', Math.round(pct));
+        }
+        if (hint && hint.style.opacity !== '0') {
+          hint.style.opacity = '0';
+          hint.style.pointerEvents = 'none';
+        }
+      }
+
+      function onPointerDown(e) {
+        e.stopPropagation();
+        isDragging = true;
+        slider.classList.add('is-dragging');
+        if (handle && handle.setPointerCapture) {
+          try {
+            handle.setPointerCapture(e.pointerId);
+          } catch (err) {}
+        }
+        setPosition(e.clientX);
+      }
+
+      function onPointerMove(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        e.stopPropagation();
+        setPosition(e.clientX);
+      }
+
+      function onPointerUp(e) {
+        if (!isDragging) return;
+        e.stopPropagation();
+        isDragging = false;
+        slider.classList.remove('is-dragging');
+        if (handle && handle.releasePointerCapture) {
+          try {
+            handle.releasePointerCapture(e.pointerId);
+          } catch (err) {}
+        }
+      }
+
+      slider.addEventListener('pointerdown', onPointerDown);
+      slider.addEventListener('pointermove', onPointerMove);
+      slider.addEventListener('pointerup', onPointerUp);
+      slider.addEventListener('pointercancel', onPointerUp);
+
+      slider.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+
+      // Keyboard navigation support
+      if (handle) {
+        handle.addEventListener('keydown', function (e) {
+          var current = parseFloat(getComputedStyle(slider).getPropertyValue('--pos')) || 50;
+          var step = 5;
+          var next = current;
+
+          if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+            next = Math.max(0, current - step);
+          } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+            next = Math.min(100, current + step);
+          } else if (e.key === 'Home') {
+            next = 0;
+          } else if (e.key === 'End') {
+            next = 100;
+          } else {
+            return;
+          }
+
+          e.preventDefault();
+          e.stopPropagation();
+          slider.style.setProperty('--pos', next + '%');
+          handle.setAttribute('aria-valuenow', Math.round(next));
+          if (hint) {
+            hint.style.opacity = '0';
+            hint.style.pointerEvents = 'none';
+          }
+        });
+      }
+    });
+  }
+
+  // Run slider initialization
+  initComparisonSliders();
 
   if (filtersEl && caseCards.length) {
     filtersEl.addEventListener('click', function (e) {
@@ -529,7 +631,7 @@
       caseCards.forEach(function (card) {
         var show =
           filter === 'All' ||
-          (filter === 'Videos' && card.getAttribute('data-type') === 'video') ||
+          card.getAttribute('data-category') === filter ||
           card.getAttribute('data-agegroup') === filter;
         card.style.display = show ? '' : 'none';
       });
@@ -542,8 +644,6 @@
   var modalCondition = document.getElementById('modalCondition');
   var modalTitle = document.getElementById('modalTitle');
   var modalTabs = document.getElementById('modalTabs');
-  var modalBeforeSlot = document.getElementById('modalBeforeSlot');
-  var modalAfterSlot = document.getElementById('modalAfterSlot');
   var modalVideoLabel = document.getElementById('modalVideoLabel');
   var modalInfoTreatment = document.getElementById('modalInfoTreatment');
   var modalInfoDuration = document.getElementById('modalInfoDuration');
@@ -554,7 +654,6 @@
   var modalPanelInfo = document.getElementById('modalPanelInfo');
 
   var currentTabs = [];
-  var currentTabIndex = 0;
   var lastFocusedEl = null;
 
   function openModal(card) {
@@ -568,8 +667,42 @@
     modalInfoAgeGroup.textContent = data.agegroup;
     modalInfoDescription.textContent = data.description;
 
-    modalBeforeSlot.setAttribute('data-label', 'BEFORE — ' + data.condition.toLowerCase());
-    modalAfterSlot.setAttribute('data-label', 'AFTER — ' + data.treatment.toLowerCase());
+    var beforeSrc = card.getAttribute('data-before') || '';
+    var afterSrc = card.getAttribute('data-after') || '';
+
+    var modalImgBefore = document.getElementById('modalImgBefore');
+    var modalImgAfter = document.getElementById('modalImgAfter');
+    var modalThumbBefore = document.getElementById('modalThumbBefore');
+    var modalThumbAfter = document.getElementById('modalThumbAfter');
+    var modalSlider = document.getElementById('modalSlider');
+
+    if (modalImgBefore && beforeSrc) {
+      modalImgBefore.src = beforeSrc;
+      modalImgBefore.alt = 'Before Treatment — ' + data.title;
+    }
+    if (modalImgAfter && afterSrc) {
+      modalImgAfter.src = afterSrc;
+      modalImgAfter.alt = 'After Result — ' + data.title;
+    }
+    if (modalThumbBefore && beforeSrc) {
+      modalThumbBefore.src = beforeSrc;
+      modalThumbBefore.alt = 'Before Treatment — ' + data.title;
+    }
+    if (modalThumbAfter && afterSrc) {
+      modalThumbAfter.src = afterSrc;
+      modalThumbAfter.alt = 'After Result — ' + data.title;
+    }
+    if (modalSlider) {
+      modalSlider.style.setProperty('--pos', '50%');
+      var modalHandle = modalSlider.querySelector('.comparison-slider__handle');
+      if (modalHandle) modalHandle.setAttribute('aria-valuenow', '50');
+      var modalHint = modalSlider.querySelector('.comparison-slider__hint');
+      if (modalHint) {
+        modalHint.style.opacity = '';
+        modalHint.style.pointerEvents = '';
+      }
+    }
+
     modalVideoLabel.textContent = data.videolabel || '';
 
     currentTabs = isVideo ? ['video', 'photos', 'info'] : ['photos', 'info'];
@@ -587,7 +720,7 @@
     currentTabs.forEach(function (tab) {
       var btn = document.createElement('button');
       btn.type = 'button';
-      btn.textContent = tab === 'photos' ? 'Photos' : tab === 'video' ? 'Video' : 'Info';
+      btn.textContent = tab === 'photos' ? 'Photos & Slider' : tab === 'video' ? 'Video Story' : 'Case Info';
       btn.setAttribute('data-tab', tab);
       btn.addEventListener('click', function () { setActiveTab(tab); });
       modalTabs.appendChild(btn);
@@ -614,7 +747,20 @@
   }
 
   caseCards.forEach(function (card) {
-    card.addEventListener('click', function () { openModal(card); });
+    card.addEventListener('click', function (e) {
+      // Ignore click if user clicked on or dragged the comparison slider
+      if (e.target.closest('.comparison-slider')) {
+        return;
+      }
+      openModal(card);
+    });
+
+    card.addEventListener('keydown', function (e) {
+      if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('.comparison-slider__handle')) {
+        e.preventDefault();
+        openModal(card);
+      }
+    });
   });
 
   if (modal) {
@@ -623,6 +769,7 @@
     });
   }
   if (modalClose) modalClose.addEventListener('click', closeModal);
+
 
   /* =========================================================
      3. CONTACT FORM (client-side demo)
