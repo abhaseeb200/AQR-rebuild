@@ -10,505 +10,304 @@
   'use strict';
 
   /* =========================================================
-     1. HERO WHEEL CAROUSEL
-  /* =========================================================
-     1. HERO WHEEL & SHOWCASE CAROUSEL
+     1. HERO SLIDER (PHOTO REEL)
   ========================================================= */
-  var heroCases = [
-    {
-      id: 0,
-      eyebrow: 'Braces',
-      treatment: 'Damon Ultima Braces',
-      title: 'Severe Crowding, Corrected',
-      meta: '14-month treatment · Teen patient',
-      badge: 'Verified Result',
-      afterLabel: 'AFTER — Damon braces result',
-      image: 'https://aqrorthodontics.com/wp-content/uploads/2025/01/3B.webp',
-      galleryId: 'c1'
-    },
-    {
-      id: 1,
-      eyebrow: 'Clear Aligner',
-      treatment: 'Spark Clear Aligners',
-      title: 'Spacing Closed with Spark Aligners',
-      meta: '9-month treatment · Adult patient',
-      badge: 'Verified Result',
-      afterLabel: 'AFTER — Spark aligners result',
-      image: 'https://aqrorthodontics.com/wp-content/uploads/2025/04/7B-ALIGNERS.webp',
-      galleryId: 'c2'
-    },
-    {
-      id: 2,
-      eyebrow: 'Functional',
-      treatment: 'Twin Block Appliance',
-      title: 'Early Crossbite Correction',
-      meta: '8-month treatment · Age 8',
-      badge: 'Pediatric Care',
-      afterLabel: 'AFTER — palatal expander result',
-      image: 'https://aqrorthodontics.com/wp-content/uploads/2025/04/Twinblock-treatment-2.jpg.webp',
-      galleryId: 'c3'
-    },
-    {
-      id: 3,
-      eyebrow: 'Airway',
-      treatment: 'Myofunctional Therapy',
-      title: 'Nasal Breathing Restored',
-      meta: '12-month treatment · Age 10',
-      badge: 'Holistic Airway',
-      afterLabel: 'AFTER — myofunctional therapy result',
-      image: 'https://aqrorthodontics.com/wp-content/uploads/2024/12/Airway-5.jpeg',
-      galleryId: 'c7'
-    }
-  ];
+  /* ==========================================================================
+     AQR Orthodontics — Hero slider (photo reel)
 
-  function mod(n, m) {
-    return ((n % m) + m) % m;
-  }
+     How it works
+     ------------
+     The photos are wedge-shaped slices of ONE big circle whose centre sits far
+     off to the right of the column. Every panel is rotated about that centre
+     (16° per slide) and clipped to a radial wedge; the circular overflow of
+     .reel__disc carves the curved outer edge. Turning the reel = changing the
+     rotation of every panel, so it always spins the same direction.
+     ========================================================================== */
 
-  function HeroWheel(options) {
-    this.track = options.track;
-    this.categoriesEl = options.categoriesEl;
-    this.dotsEl = options.dotsEl;
-    this.counterEl = options.counterEl;
-    this.prevBtn = options.prevBtn;
-    this.nextBtn = options.nextBtn;
-    this.hoverBoundary = options.hoverBoundary;
+  (function () {
+    'use strict';
 
-    this.wheelPos = 0;
-    this.wheelW = 460;
-    this.wheelH = 480;
-    this.paused = false;
-    this.timer = null;
-
-    this.cardEls = [];
-    this.badgeEls = [];
-    this.categoryBtns = [];
-    this.dotEls = [];
-
-    this._buildDom();
-    this._bindEvents();
-    this._measure();
-    this.render();
-
-    var self = this;
-    requestAnimationFrame(function () { self._measure(); self.render(); });
-    setTimeout(function () { self._measure(); self.render(); }, 300);
-
-    // Autoscroll timer (3.8s per case)
-    this.timer = setInterval(function () {
-      if (!self.paused) {
-        self.wheelPos += 1;
-        self.render();
-      }
-    }, 3800);
-  }
-
-  HeroWheel.prototype._buildDom = function () {
-    var self = this;
-
-    // Build category tabs
-    if (this.categoriesEl) {
-      heroCases.forEach(function (h, i) {
-        var catBtn = document.createElement('button');
-        catBtn.type = 'button';
-        catBtn.className = 'hero__category-btn' + (i === 0 ? ' is-active' : '');
-        catBtn.setAttribute('role', 'tab');
-        catBtn.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
-        catBtn.setAttribute('aria-label', 'View ' + h.eyebrow + ' cases');
-        catBtn.textContent = h.eyebrow;
-
-        catBtn.addEventListener('click', function () {
-          self.goToIndex(i);
-        });
-
-        self.categoriesEl.appendChild(catBtn);
-        self.categoryBtns.push(catBtn);
-      });
-    }
-
-    // Build showcase cards and satellite badges
-    heroCases.forEach(function (h, i) {
-      var card = document.createElement('div');
-      card.className = 'wheel-card';
-      card.setAttribute('role', 'group');
-      card.setAttribute('aria-roledescription', 'slide');
-      card.setAttribute('aria-label', h.title + ' — ' + h.treatment);
-      card.tabIndex = 0;
-
-      var inner = document.createElement('div');
-      inner.className = 'wheel-card__inner';
-
-      var media = document.createElement('div');
-      media.className = 'wheel-card__media';
-
-      if (h.image) {
-        var img = document.createElement('img');
-        img.className = 'wheel-card__img';
-        img.src = h.image;
-        img.alt = h.title;
-        img.loading = 'eager';
-        img.decoding = 'async';
-        media.appendChild(img);
-      } else {
-        var imgSlot = document.createElement('div');
-        imgSlot.className = 'img-slot';
-        imgSlot.setAttribute('data-label', h.afterLabel);
-        media.appendChild(imgSlot);
-      }
-
-      var badges = document.createElement('div');
-      badges.className = 'wheel-card__badges';
-      badges.innerHTML =
-        '<span class="wheel-card__pill"><span class="wheel-card__pill-dot"></span>' + h.treatment + '</span>' +
-        '<span class="wheel-card__verified"><svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>' + h.badge + '</span>';
-      media.appendChild(badges);
-      inner.appendChild(media);
-
-      var overlay = document.createElement('div');
-      overlay.className = 'wheel-card__overlay';
-      overlay.innerHTML =
-        '<span class="wheel-card__eyebrow">' + h.eyebrow + '</span>' +
-        '<h3 class="wheel-card__title">' + h.title + '</h3>' +
-        '<div class="wheel-card__meta">' +
-        '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>' +
-        '<span>' + h.meta + '</span>' +
-        '</div>';
-      inner.appendChild(overlay);
-
-      var actionHint = document.createElement('button');
-      actionHint.type = 'button';
-      actionHint.className = 'wheel-card__action-hint';
-      actionHint.setAttribute('aria-label', 'View detailed patient case story for ' + h.title);
-      actionHint.innerHTML = '<span>View Story</span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>';
-      actionHint.addEventListener('click', function (e) {
-        e.stopPropagation();
-        var galleryBtn = document.querySelector('.case-card[data-id="' + h.galleryId + '"]');
-        if (galleryBtn) {
-          galleryBtn.click();
-        } else {
-          var gallerySec = document.getElementById('gallery');
-          if (gallerySec) gallerySec.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-      inner.appendChild(actionHint);
-
-      card.appendChild(inner);
-
-      card.addEventListener('click', function () {
-        var current = mod(Math.round(self.wheelPos), heroCases.length);
-        if (current === i) {
-          var galleryBtn = document.querySelector('.case-card[data-id="' + h.galleryId + '"]');
-          if (galleryBtn) galleryBtn.click();
-        } else {
-          self.goToIndex(i);
-        }
-      });
-
-      card.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          self.goToIndex(i);
-        }
-      });
-
-      self.track.appendChild(card);
-      self.cardEls.push(card);
-
-      // Desktop orbital satellite badge
-      var badge = document.createElement('button');
-      badge.type = 'button';
-      badge.className = 'wheel-badge';
-      badge.setAttribute('aria-label', 'Select ' + h.eyebrow + ' treatment case');
-      var badgeLabel = document.createElement('span');
-      badgeLabel.className = 'wheel-badge__eyebrow';
-      badgeLabel.textContent = h.eyebrow;
-      badge.appendChild(badgeLabel);
-      badge.addEventListener('click', function () { self.goToIndex(i); });
-      self.track.appendChild(badge);
-      self.badgeEls.push(badge);
-
-      // Dots
-      if (self.dotsEl) {
-        var dot = document.createElement('button');
-        dot.type = 'button';
-        dot.className = 'hero__dot' + (i === 0 ? ' is-active' : '');
-        dot.setAttribute('aria-label', 'Show case ' + (i + 1));
-        dot.addEventListener('click', function () { self.goToIndex(i); });
-        self.dotsEl.appendChild(dot);
-        self.dotEls.push(dot);
-      }
-    });
-  };
-
-  HeroWheel.prototype._bindEvents = function () {
-    var self = this;
-    this._measureHandler = function () {
-      self._measure();
-      self.render();
+    /* ---- Settings ---------------------------------------------------------- */
+    var CONFIG = {
+      autoplay: true,   // turn the reel automatically
+      interval: 4200,   // ms between automatic turns
+      stepDeg: 16,      // angle between neighbouring photos
+      gap: 9            // px seam between neighbouring photos
     };
-    window.addEventListener('resize', this._measureHandler);
-    window.addEventListener('orientationchange', function () {
-      setTimeout(function () { self._measure(); self.render(); }, 150);
+
+    /* ---- Elements ---------------------------------------------------------- */
+    var hero       = document.getElementById('hero');
+    var reel       = document.getElementById('hero-reel');
+    if (!hero || !reel) return;
+    var disc       = reel.querySelector('.reel__disc');
+    var hub        = reel.querySelector('.reel__hub');
+    var panels     = Array.prototype.slice.call(reel.querySelectorAll('.reel__panel'));
+    var dotsWrap   = document.getElementById('hero-dots');
+    var titleEl    = document.getElementById('hero-caption-title');
+    var metaEl     = document.getElementById('hero-caption-meta');
+
+    var n = panels.length;
+    if (!n) return;
+
+    /* ---- State ------------------------------------------------------------- */
+    var pos    = 0;       // continuous position; only ever grows, never wraps
+    var paused = false;
+    var geo    = null;    // current reel geometry (see layout())
+    var lastW  = 0;
+
+    function mod(a, m) { return ((a % m) + m) % m; }
+
+    /* ---- Dots -------------------------------------------------------------- */
+    var dots = panels.map(function (panel, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'hero__dot';
+      b.setAttribute('aria-label', 'Show result ' + (i + 1) + ': ' + panel.dataset.title);
+      b.addEventListener('click', function () { goTo(i); });
+      dotsWrap.appendChild(b);
+      return b;
     });
 
-    if (this.prevBtn) {
-      this.prevBtn.addEventListener('click', function () {
-        self.wheelPos -= 1;
-        self.render();
+    /* ---- Navigation -------------------------------------------------------- */
+    // Shortest way round to slide i, so the reel keeps turning naturally.
+    function goTo(i) {
+      var current = mod(pos, n);
+      var delta = i - current;
+      if (delta >  n / 2) delta -= n;
+      if (delta < -n / 2) delta += n;
+      pos += delta;
+      render();
+    }
+
+    panels.forEach(function (panel, i) {
+      panel.addEventListener('click', function () { goTo(i); });
+    });
+
+    /* ---- Geometry (depends on the width of the reel column) ---------------- */
+    function layout() {
+      var W = reel.clientWidth || 460;
+      lastW = W;
+
+      var R       = 1.8 * W;                       // outer radius of the reel
+      var centerX = R + 0.18 * W;                  // circle centre, right of the column
+      var Ri      = Math.max(120, centerX - W);    // radius where the reel meets the column edge
+      var pad     = 90;                            // panels overshoot R so the disc clips a clean arc
+      var Rout    = R + pad;
+      var L       = Rout - Ri;                     // panel length
+      var t       = Math.tan((CONFIG.stepDeg / 2) * Math.PI / 180);
+      var H       = 2 * Rout * t;                  // panel height at the outer edge
+      var inHalf  = Math.max(6, Ri * t - CONFIG.gap / 2);
+      var trackH  = Math.round(1.05 * W);
+      var discSize = Math.round(2 * R);
+
+      geo = {
+        W: W, Rout: Rout,
+        L: Math.round(L), H: Math.round(H),
+        inHalf: Math.round(inHalf)
+      };
+
+      reel.style.height = trackH + 'px';
+
+      disc.style.left   = Math.round(centerX - R) + 'px';
+      disc.style.top    = Math.round(trackH / 2 - R) + 'px';
+      disc.style.width  = discSize + 'px';
+      disc.style.height = discSize + 'px';
+
+      hub.style.left = Math.round(R) + 'px';
+      hub.style.top  = Math.round(R) + 'px';
+
+      var g = CONFIG.gap / 2;
+      var clip = 'polygon(0px ' + g + 'px, 0px calc(100% - ' + g + 'px), ' +
+                 '100% calc(50% + ' + geo.inHalf + 'px), 100% calc(50% - ' + geo.inHalf + 'px))';
+
+      panels.forEach(function (panel) {
+        panel.style.width    = geo.L + 'px';
+        panel.style.height   = geo.H + 'px';
+        panel.style.clipPath = clip;
+        panel.style.webkitClipPath = clip;
+        frameImage(panel);
       });
     }
 
-    if (this.nextBtn) {
-      this.nextBtn.addEventListener('click', function () {
-        self.wheelPos += 1;
-        self.render();
+    /* ---- Photo framing: "cover" fit × zoom, panned by x / y (in %) ---------- */
+    function frameImage(panel) {
+      var img = panel.querySelector('.reel__frame img');
+      if (!img || !img.naturalWidth || !geo) return;
+
+      var iw = img.naturalWidth,  ih = img.naturalHeight;
+      var fw = geo.L,             fh = geo.H;
+      var s  = parseFloat(panel.dataset.scale) || 1;
+      var x  = parseFloat(panel.dataset.x) || 0;
+      var y  = parseFloat(panel.dataset.y) || 0;
+
+      var base = Math.max(fw / iw, fh / ih);       // cover
+      var k    = base * s;
+
+      // keep the pan inside the picture
+      var mx = Math.max(0, (iw * k / fw - 1) * 50);
+      var my = Math.max(0, (ih * k / fh - 1) * 50);
+      x = Math.max(-mx, Math.min(mx, x));
+      y = Math.max(-my, Math.min(my, y));
+
+      img.style.width  = (iw * k / fw * 100) + '%';
+      img.style.height = (ih * k / fh * 100) + '%';
+      img.style.left   = (50 + x) + '%';
+      img.style.top    = (50 + y) + '%';
+    }
+
+    panels.forEach(function (panel) {
+      var img = panel.querySelector('.reel__frame img');
+      if (img) img.addEventListener('load', function () { frameImage(panel); });
+    });
+
+    /* ---- Draw the current position ----------------------------------------- */
+    function render() {
+      if (!geo) return;
+      var active = mod(pos, n);
+
+      panels.forEach(function (panel, i) {
+        // shortest signed offset from the active slide keeps the reel spinning one way
+        var offset = mod(i - pos + n / 2, n) - n / 2;
+        var abs    = Math.abs(offset);
+        var angle  = offset * CONFIG.stepDeg;
+
+        var opacity = abs <= 1.05 ? 1 : Math.max(0.32, 1 - (abs - 1.05) * 0.55);
+        var filter  = abs < 0.001
+          ? 'grayscale(0) brightness(1)'
+          : 'grayscale(1) brightness(' + (0.92 - abs * 0.05).toFixed(2) + ')';
+
+        panel.style.transform =
+          'rotate(' + angle.toFixed(2) + 'deg) ' +
+          'translate(' + (-Math.round(geo.Rout)) + 'px, ' + (-Math.round(geo.H / 2)) + 'px)';
+        panel.style.opacity = opacity.toFixed(2);
+        panel.style.zIndex  = Math.round(100 - abs * 10);
+        panel.style.filter  = filter;
       });
+
+      dots.forEach(function (dot, i) {
+        var on = i === active;
+        dot.classList.toggle('is-active', on);
+        if (on) dot.setAttribute('aria-current', 'true');
+        else dot.removeAttribute('aria-current');
+      });
+
+      titleEl.textContent = panels[active].dataset.title || '';
+      metaEl.textContent  = panels[active].dataset.meta  || '';
     }
 
-    if (this.hoverBoundary) {
-      this.hoverBoundary.addEventListener('mouseenter', function () { self.paused = true; });
-      this.hoverBoundary.addEventListener('mouseleave', function () { self.paused = false; });
-      this.hoverBoundary.addEventListener('focusin', function () { self.paused = true; });
-      this.hoverBoundary.addEventListener('focusout', function () { self.paused = false; });
+    /* ---- Autoplay (pauses while the pointer is over the hero) -------------- */
+    var reduceMotion = window.matchMedia &&
+                       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (CONFIG.autoplay && !reduceMotion) {
+      setInterval(function () {
+        if (!paused) { pos += 1; render(); }
+      }, CONFIG.interval);
     }
 
-    // Touch / swipe gestures for mobile & tablets
-    var touchStartX = 0;
-    var touchStartY = 0;
-    var touchStartTime = 0;
+    hero.addEventListener('pointerenter', function (e) { if (e.pointerType !== 'touch') paused = true; });
+    hero.addEventListener('pointerleave', function (e) { if (e.pointerType !== 'touch') paused = false; });
+    hero.addEventListener('focusin',  function () { paused = true; });
+    hero.addEventListener('focusout', function () { paused = false; });
 
-    this.track.addEventListener('touchstart', function (e) {
-      if (e.touches.length === 1) {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-        touchStartTime = Date.now();
-        self.paused = true;
+    /* ---- Measure once on mount (matches the original design exactly) ------
+       The reel's geometry is computed from the column's width a few times
+       right after mount (immediately, next frame, and once more after fonts/
+       layout settle) and then LEFT ALONE — there is no resize listener.
+       This is intentional, not an oversight: it's what makes the reel scale
+       smoothly with the whole page under browser zoom (which rescales the
+       already-laid-out page uniformly, like a photograph). Re-measuring on
+       every size change would fight that rescaling and cancel it out. The
+       trade-off, also present in the original, is that the reel does not
+       reflow if the browser WINDOW itself is resized after the page has
+       loaded (a page refresh picks up the new size). */
+    function relayout() {
+      if (reel.clientWidth && reel.clientWidth !== lastW) {
+        layout();
+        render();
       }
+    }
+
+    relayout();
+    requestAnimationFrame(relayout);
+    setTimeout(relayout, 300);
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { hero.classList.add('is-ready'); });
+    });
+  })();
+
+  /* =========================================================
+     1b. HERO MOBILE SWIPE CAROUSEL
+     (only active when .hero__mobile-reel is visible, i.e. ≤ 768px)
+  ========================================================= */
+  (function () {
+    var wrap   = document.getElementById('hero-mobile-reel');
+    if (!wrap) return;
+
+    var track  = document.getElementById('hmr-track');
+    var dotsW  = document.getElementById('hmr-dots');
+    var titleEl = document.getElementById('hmr-title');
+    var metaEl  = document.getElementById('hmr-meta');
+    if (!track || !dotsW) return;
+
+    var slides = Array.prototype.slice.call(track.querySelectorAll('.hmr__slide'));
+    var n = slides.length;
+    if (!n) return;
+
+    /* Build dots */
+    var dots = slides.map(function (slide, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'hmr__dot' + (i === 0 ? ' is-active' : '');
+      b.setAttribute('aria-label', 'Show result ' + (i + 1) + ': ' + slide.dataset.title);
+      b.addEventListener('click', function () { scrollTo(i); });
+      dotsW.appendChild(b);
+      return b;
+    });
+
+    function scrollTo(i) {
+      var slide = slides[i];
+      track.scrollTo({ left: slide.offsetLeft - track.offsetLeft, behavior: 'smooth' });
+    }
+
+    function activate(i) {
+      slides.forEach(function (s, j) { s.classList.toggle('is-active', j === i); });
+      dots.forEach(function (d, j) { d.classList.toggle('is-active', j === i); });
+      if (titleEl) titleEl.textContent = slides[i].dataset.title || '';
+      if (metaEl)  metaEl.textContent  = slides[i].dataset.meta  || '';
+    }
+
+    /* IntersectionObserver: whichever slide is most visible = active */
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            activate(slides.indexOf(entry.target));
+          }
+        });
+      }, { root: track, threshold: 0.55 });
+      slides.forEach(function (s) { obs.observe(s); });
+    }
+
+    /* Autoplay — pauses on touch */
+    var paused = false;
+    var current = 0;
+
+    track.addEventListener('touchstart', function () { paused = true; },  { passive: true });
+    track.addEventListener('touchend',   function () {
+      setTimeout(function () { paused = false; }, 2000);
     }, { passive: true });
 
-    this.track.addEventListener('touchend', function (e) {
-      self.paused = false;
-      if (e.changedTouches.length === 1) {
-        var deltaX = e.changedTouches[0].clientX - touchStartX;
-        var deltaY = e.changedTouches[0].clientY - touchStartY;
-        var duration = Date.now() - touchStartTime;
+    setInterval(function () {
+      if (paused) return;
+      /* only run on mobile (carousel visible) */
+      if (wrap.offsetParent === null) return;
+      current = (current + 1) % n;
+      scrollTo(current);
+    }, 4200);
 
-        if (duration < 650) {
-          if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY)) {
-            if (deltaX < 0) {
-              self.wheelPos += 1;
-            } else {
-              self.wheelPos -= 1;
-            }
-            self.render();
-          } else if (Math.abs(deltaY) > 40 && Math.abs(deltaY) > Math.abs(deltaX)) {
-            if (deltaY < 0) {
-              self.wheelPos += 1;
-            } else {
-              self.wheelPos -= 1;
-            }
-            self.render();
-          }
-        }
-      }
-    }, { passive: true });
-  };
-
-  HeroWheel.prototype._measure = function () {
-    var w = this.track.clientWidth || this.track.offsetWidth;
-    var h = this.track.clientHeight || this.track.offsetHeight;
-    if (w > 0) this.wheelW = w;
-    if (h > 0) this.wheelH = h;
-  };
-
-  HeroWheel.prototype.goToIndex = function (i) {
-    var n = heroCases.length;
-    var current = mod(this.wheelPos, n);
-    var delta = i - current;
-    if (delta > n / 2) delta -= n;
-    if (delta < -n / 2) delta += n;
-    this.wheelPos += delta;
-    this.render();
-  };
-
-  HeroWheel.prototype.render = function () {
-    var n = heroCases.length;
-    var activeIndex = mod(Math.round(this.wheelPos), n);
-
-    // Update Counter
-    if (this.counterEl) {
-      var curStr = (activeIndex + 1) < 10 ? '0' + (activeIndex + 1) : '' + (activeIndex + 1);
-      var totStr = n < 10 ? '0' + n : '' + n;
-      this.counterEl.textContent = curStr + ' / ' + totStr;
-    }
-
-    // Update Category Switcher buttons
-    this.categoryBtns.forEach(function (btn, i) {
-      var isAct = (i === activeIndex);
-      btn.classList.toggle('is-active', isAct);
-      btn.setAttribute('aria-selected', isAct ? 'true' : 'false');
-    });
-
-    // Update Dots
-    this.dotEls.forEach(function (dot, i) {
-      dot.classList.toggle('is-active', i === activeIndex);
-    });
-
-    var wheelW = this.wheelW || 460;
-    var trackH = this.wheelH || 480;
-    var isDesktop = wheelW >= 968 || window.innerWidth >= 968;
-
-    if (!isDesktop) {
-      // =========================================================
-      // MOBILE & TABLET RESPONSIVE SHOWCASE ENGINE
-      // =========================================================
-      var cardW = Math.min(wheelW - 24, 420);
-      if (wheelW < 400) cardW = wheelW - 16;
-      var cardH = Math.min(trackH - 12, Math.round(cardW * 0.68));
-      var centerX = Math.round((wheelW - cardW) / 2);
-      var centerY = Math.round((trackH - cardH) / 2);
-
-      for (var i = 0; i < n; i++) {
-        var offset = i - this.wheelPos;
-        offset = mod(offset + n / 2, n) - n / 2;
-        var abs = Math.abs(offset);
-
-        var card = this.cardEls[i];
-        var badge = this.badgeEls[i];
-
-        // Hide satellite badges completely on mobile/tablet
-        if (badge) {
-          badge.style.display = 'none';
-        }
-
-        if (abs > 1.25) {
-          card.style.opacity = '0';
-          card.style.visibility = 'hidden';
-          card.style.pointerEvents = 'none';
-          card.style.zIndex = '0';
-          continue;
-        }
-
-        var scale = Math.max(0.85, 1 - abs * 0.15);
-        var opacity = Math.max(0, 1 - abs * 0.65);
-        var zIndex = Math.round(100 - abs * 25);
-        var xShift = offset * (cardW * 0.94);
-        var leftPx = Math.round(centerX + xShift);
-        var topPx = centerY;
-
-        card.style.display = 'block';
-        card.style.visibility = 'visible';
-        card.style.pointerEvents = abs < 0.5 ? 'auto' : 'pointer';
-        card.style.left = leftPx + 'px';
-        card.style.top = topPx + 'px';
-        card.style.width = cardW + 'px';
-        card.style.height = cardH + 'px';
-        card.style.transform = 'scale(' + scale + ')';
-        card.style.opacity = opacity;
-        card.style.zIndex = zIndex;
-        card.classList.toggle('is-active', abs < 0.5);
-      }
-    } else {
-      // =========================================================
-      // PREVIOUS DESKTOP CIRCULAR ARC WHEEL ENGINE (RESTORED)
-      // =========================================================
-      var activeBadgeD = 160;
-      var inactiveBadgeD = 88;
-      var badgeCenterX = Math.round(wheelW - activeBadgeD / 2 - 54);
-      var dCardW = Math.max(220, Math.min(310, (badgeCenterX - 20) * 0.72));
-      var dCardH = Math.max(160, Math.min(205, trackH * 0.32));
-      var spacingY = Math.round(dCardH * 0.88 + 48);
-      var R = Math.max(60, Math.min(220, badgeCenterX - dCardW - 30));
-
-      for (var j = 0; j < n; j++) {
-        var dOffset = j - this.wheelPos;
-        dOffset = mod(dOffset + n / 2, n) - n / 2;
-        var dAbs = Math.abs(dOffset);
-
-        var dCard = this.cardEls[j];
-        var dBadge = this.badgeEls[j];
-
-        var y = dOffset * spacingY;
-        var arcRatio = Math.min(1, Math.abs(y) / (R * 1.25 || 1));
-        var x = -Math.round(R * Math.sqrt(Math.max(0, 1 - arcRatio * arcRatio * 0.65)));
-
-        var scale = Math.max(0.74, 1 - dAbs * 0.22);
-        var opacity = Math.max(0, 1 - dAbs * 0.36);
-        var zIndex = Math.round(100 - dAbs * 15);
-
-        var finalW = Math.round(dCardW * scale);
-        var finalH = Math.round(dCardH * scale);
-        var leftPx = Math.round(badgeCenterX + x - finalW - 60);
-        var topPx = Math.round(trackH / 2 + y - finalH / 2);
-
-        var badgeD = Math.round(inactiveBadgeD + Math.max(0, 1 - dAbs) * (activeBadgeD - inactiveBadgeD));
-        var badgeLeft = Math.round(badgeCenterX - badgeD / 2);
-        var badgeTopOffset = 5;
-        var badgeTop = Math.round(trackH / 2 + y - badgeD / 2 + badgeTopOffset);
-
-        dCard.style.display = 'block';
-        dCard.style.left = leftPx + 'px';
-        dCard.style.top = topPx + 'px';
-        dCard.style.width = finalW + 'px';
-        dCard.style.height = finalH + 'px';
-        dCard.style.transform = 'none';
-
-        if (dBadge) {
-          dBadge.style.display = 'flex';
-          dBadge.style.left = badgeLeft + 'px';
-          dBadge.style.top = badgeTop + 'px';
-          dBadge.style.width = badgeD + 'px';
-          dBadge.style.height = badgeD + 'px';
-        }
-
-        if (dAbs > 1.15) {
-          dCard.style.opacity = '0';
-          dCard.style.pointerEvents = 'none';
-          dCard.style.visibility = 'hidden';
-          dCard.style.zIndex = '0';
-
-          if (dBadge) {
-            dBadge.style.opacity = '0';
-            dBadge.style.pointerEvents = 'none';
-            dBadge.style.visibility = 'hidden';
-            dBadge.style.zIndex = '0';
-          }
-          continue;
-        }
-
-        dCard.style.opacity = opacity;
-        dCard.style.zIndex = zIndex;
-        dCard.style.visibility = 'visible';
-        dCard.style.pointerEvents = 'auto';
-
-        if (dBadge) {
-          dBadge.style.opacity = opacity;
-          dBadge.style.zIndex = zIndex + 5;
-          dBadge.style.visibility = 'visible';
-          dBadge.style.pointerEvents = 'auto';
-          dBadge.classList.toggle('is-active', dAbs < 0.5);
-        }
-      }
-    }
-  };
-
-  HeroWheel.prototype.destroy = function () {
-    clearInterval(this.timer);
-    window.removeEventListener('resize', this._measureHandler);
-  };
-
-  var wheelTrack = document.getElementById('hero-wheel-track');
-  if (wheelTrack) {
-    new HeroWheel({
-      track: wheelTrack,
-      categoriesEl: document.getElementById('heroCategories'),
-      dotsEl: document.getElementById('heroDots'),
-      counterEl: document.getElementById('heroCounter'),
-      prevBtn: document.getElementById('heroPrevBtn'),
-      nextBtn: document.getElementById('heroNextBtn'),
-      hoverBoundary: document.getElementById('heroWheelSection') || wheelTrack
-    });
-  }
+    activate(0);
+  })();
 
   /* =========================================================
      2. SMILE GALLERY — filters + comparison sliders + case modal

@@ -738,36 +738,71 @@ button {
 /* =========================================================
    HERO
 ========================================================= */
+.hero,
+.hero *,
+.hero *::before,
+.hero *::after {
+  box-sizing: content-box;
+}
+
 .hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0;
   align-items: stretch;
-  background: var(--cream);
+  background: #FAF7F5;
+  font-family: 'Mulish', sans-serif;
+  color: #241F1D;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
-.hero__copy {
-  padding: 48px var(--gutter) 48px 64px;
+/* --------------------------------------------------------------------------
+   Left column — copy
+   -------------------------------------------------------------------------- */
+.hero__content {
+  padding: 48px 64px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 24px;
-  max-width: 650px;
+  max-width: 640px;
+}
+
+.hero__eyebrow {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 8px;
+  background: #F3E4E7;
+  color: #7C2334;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 999px;
 }
 
 .hero__title {
+  font-family: 'Mulish', sans-serif;
   font-size: 48px;
-  line-height: 1.12;
-  color: var(--text);
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: #241F1D;
+  font-weight: 800;
 }
 
-.hero__subtitle {
+.hero__lead {
   font-size: 18px;
   line-height: 1.6;
-  color: var(--text-muted);
+  color: #6B625D;
+  margin: 0;
 }
 
-.hero__ctas {
+.hero__actions {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -775,467 +810,201 @@ button {
   margin-top: 8px;
 }
 
+/* Stats row */
 .hero__stats {
   display: grid;
   grid-template-columns: repeat(4, auto);
   gap: 32px;
-  margin: 28px 0 0;
+  margin-top: 28px;
   padding-top: 28px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid #E8E1DC;
 }
 
-.hero__stat dt {
-  font-family: var(--font-serif);
+.hero__stat-number {
+  font-family: 'Playfair Display', serif;
   font-size: 26px;
   font-weight: 700;
-  color: var(--maroon);
-  margin: 0;
+  color: #7C2334;
 }
 
-.hero__stat dd {
+.hero__stat-label {
   font-size: 12px;
-  color: var(--text-muted);
-  margin: 2px 0 0;
-}
-
-/* =========================================================
-   HERO WHEEL & SHOWCASE
-========================================================= */
-/* =========================================================
-   HERO WHEEL & SHOWCASE
-========================================================= */
-.hero__wheel-wrap {
-  position: relative;
-  padding: 48px 24px 48px 48px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: stretch;
-  overflow: visible;
-}
-
-.hero__wheel-stage {
-  position: relative;
-  height: 620px;
-  width: 100%;
-  overflow: visible;
-  min-width: 1px;
-}
-
-.hero__wheel-track {
-  position: relative;
-  height: 620px;
-  width: 100%;
-  overflow: visible;
-  min-width: 1px;
-}
-
-/* Category Filter Tabs (Mobile & Tablet) */
-.hero__categories {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
-  z-index: 25;
-  flex-wrap: wrap;
-}
-
-.hero__category-btn {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--border);
-  color: var(--text-body);
-  font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 700;
-  padding: 7px 16px;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: all 0.28s cubic-bezier(0.25, 1, 0.35, 1);
-  box-shadow: 0 2px 6px rgba(36, 31, 29, 0.04);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  outline: none;
-}
-
-.hero__category-btn:hover {
-  background: #FFFFFF;
-  border-color: rgba(124, 35, 52, 0.4);
-  color: var(--maroon);
-  transform: translateY(-1px);
-}
-
-.hero__category-btn.is-active {
-  background: var(--maroon);
-  color: #FFFFFF;
-  border-color: var(--maroon);
-  box-shadow: 0 6px 18px -4px rgba(124, 35, 52, 0.45);
-}
-
-.hero__category-btn:focus-visible {
-  outline: 2px solid var(--maroon);
-  outline-offset: 2px;
-}
-
-/* Wheel card — Desktop previous bullet shape */
-.wheel-card {
-  position: absolute;
-  transition: all 0.6s cubic-bezier(.22, 1, .36, 1);
-  cursor: pointer;
-  border-radius: 130px 18px 18px 130px;
-  overflow: hidden;
-  box-shadow: var(--shadow-card);
-  border: none;
-  padding: 0;
-  background: #EAE3DE;
-  display: block;
-}
-
-.wheel-card:hover {
-  box-shadow: 0 28px 52px -20px rgba(36, 31, 29, 0.48);
-}
-
-.wheel-card:focus-visible {
-  outline: 3px solid var(--maroon);
-  outline-offset: 4px;
-}
-
-.wheel-card__inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border-radius: 130px 18px 18px 130px;
-}
-
-.wheel-card__media {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #EDE6E1;
-}
-
-.wheel-card__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-  pointer-events: none;
-  transition: transform 0.4s ease;
-}
-
-.wheel-card:hover .wheel-card__img {
-  transform: scale(1.04);
-}
-
-/* Floating top tags inside active card (Mobile/Tablet) */
-.wheel-card__badges {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  right: 14px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 8;
-  pointer-events: none;
-  gap: 8px;
-}
-
-.wheel-card__pill {
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: var(--dark);
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  padding: 5px 12px;
-  border-radius: 999px;
-  box-shadow: 0 4px 14px rgba(36, 31, 29, 0.1);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-}
-
-.wheel-card__pill-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--maroon);
-  box-shadow: 0 0 6px rgba(124, 35, 52, 0.6);
-}
-
-.wheel-card__verified {
-  background: rgba(36, 31, 29, 0.78);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: #FFFFFF;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  padding: 5px 10px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.wheel-card__verified svg {
-  color: #F5A623;
-  flex-shrink: 0;
-}
-
-/* Bottom Glassmorphic Overlay (Mobile/Tablet) */
-.wheel-card__overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 44px 20px 18px;
-  background: linear-gradient(to top,
-      rgba(22, 17, 16, 0.95) 0%,
-      rgba(22, 17, 16, 0.82) 48%,
-      rgba(22, 17, 16, 0.45) 75%,
-      transparent 100%);
-  z-index: 6;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  color: #FFFFFF;
-  pointer-events: none;
-  transition: padding 0.3s ease;
-}
-
-.wheel-card__eyebrow {
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #E8B4BE;
-  display: block;
-}
-
-.wheel-card__title {
-  font-family: var(--font-serif);
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.25;
-  color: #FFFFFF;
-  margin: 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-}
-
-.wheel-card__meta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: #DDD4CF;
+  color: #6B625D;
   margin-top: 2px;
 }
 
-.wheel-card__meta svg {
-  opacity: 0.85;
-  flex-shrink: 0;
+/* --------------------------------------------------------------------------
+   Right column — slider
+   -------------------------------------------------------------------------- */
+.hero__media {
+  position: relative;
+  /* padding: 40px 0 48px 48px; */
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: flex-end;
+  overflow: visible;
 }
 
-/* Action Button */
-.wheel-card__action-hint {
+/* The reel window. Its height is set by script.js (≈ 1.05 × its width);
+   the fallback below is what shows before the script runs. */
+.reel {
+  position: relative;
+  height: 483px;
+  width: 100%;
+  overflow: hidden;
+  min-width: 1px;
+}
+
+/* One huge circle whose centre sits far to the right of the column.
+   script.js sizes/positions .reel__disc and .reel__hub.
+   The disc's circular overflow carves the curved outer edge of the reel. */
+.reel__disc {
   position: absolute;
-  bottom: 16px;
-  right: 16px;
-  z-index: 10;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--maroon);
-  color: #FFFFFF;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 7px 14px;
-  border-radius: 999px;
-  box-shadow: 0 4px 16px rgba(124, 35, 52, 0.5);
-  opacity: 0;
-  transform: translateY(8px);
-  transition: all 0.3s cubic-bezier(0.25, 1, 0.35, 1);
-  pointer-events: auto;
-  cursor: pointer;
-  border: none;
-}
-
-.wheel-card.is-active:hover .wheel-card__action-hint {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Previous Desktop Circular Arc Badges */
-.wheel-badge {
-  position: absolute;
-  transition: all 0.6s cubic-bezier(.22, 1, .36, 1);
-  cursor: pointer;
   border-radius: 50%;
+  overflow: hidden;
+}
+
+.reel__hub {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+/* Each photo is a wedge of that circle: rotated about the hub and clipped
+   to a radial slice. script.js sets width/height/transform/clip-path/
+   opacity/z-index/filter. */
+.reel__panel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  cursor: pointer;
+  overflow: hidden;
+  background: #241F1D;
+}
+
+/* Turned on by script.js once the first layout is done, so nothing
+   animates on page load or while the window is being resized. */
+.hero.is-ready .reel__panel {
+  transition: transform 0.8s cubic-bezier(.22, 1, .36, 1),
+    opacity 0.8s ease,
+    filter 0.8s ease;
+}
+
+/* Photo frame: the image is positioned/zoomed by script.js */
+.reel__frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: rgba(127, 127, 127, .08);
+}
+
+.reel__frame img {
+  position: absolute;
+  max-width: none;
+  transform: translate(-50%, -50%);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Placeholder for slides that don't have a photo yet */
+.reel__empty {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   text-align: center;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  padding: 0 10px;
-  box-shadow: 0 14px 28px -18px rgba(36, 31, 29, 0.35);
-  border: 1px solid var(--border);
-  background: #fff;
-  color: var(--text);
-  line-height: 1.25;
+  padding: 12px;
   box-sizing: border-box;
-  z-index: 50;
+  font: 13px/1.3 system-ui, -apple-system, sans-serif;
+  color: inherit;
+  user-select: none;
 }
 
-.wheel-badge:hover {
-  border-color: var(--maroon);
-  color: var(--maroon);
+.reel__empty svg {
+  opacity: .45;
 }
 
-.wheel-badge__eyebrow {
-  display: block;
-  font-weight: 700;
-  transition: all 0.3s ease;
+.reel__empty-caption {
+  max-width: 90%;
+  font-weight: 500;
+  letter-spacing: .01em;
+  opacity: .75;
 }
 
-.wheel-badge.is-active {
-  background: var(--maroon);
-  color: #fff;
-  border: none;
-  padding: 28px 22px;
-  box-shadow: 0 20px 42px -12px rgba(124, 35, 52, 0.55), 0 0 0 5px rgba(124, 35, 52, 0.12);
-}
-
-.wheel-badge.is-active .wheel-badge__eyebrow {
-  font-size: 14px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.82);
-}
-
-.wheel-badge.is-active:hover {
-  color: #fff;
-  transform: scale(1.03);
-}
-
-/* Desktop Visibility Control: Hide mobile overlay & mobile controls on Desktop */
-@media (min-width: 969px) {
-
-  .hero__categories,
-  .hero__controls,
-  .wheel-card__badges,
-  .wheel-card__overlay,
-  .wheel-card__action-hint {
-    display: none !important;
-  }
-}
-
-/* Navigation Controls Bar (Mobile & Tablet) */
-.hero__controls {
+/* --------------------------------------------------------------------------
+   Caption card + dots
+   -------------------------------------------------------------------------- */
+.hero__caption {
+  background: #fff;
+  border: 1px solid #E8E1DC;
+  border-radius: 16px;
+  padding: 18px 22px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  margin-top: 20px;
-  width: 100%;
-  max-width: 460px;
-  margin-left: auto;
-  margin-right: auto;
-  z-index: 25;
+  gap: 12px;
+  flex-wrap: wrap;
+  box-shadow: 0 20px 50px -30px rgba(36, 31, 29, 0.4);
+  max-width: 520px;
 }
 
-.hero__control-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  border: 1px solid var(--border);
-  background: #FFFFFF;
-  color: var(--text);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.25, 1, 0.35, 1);
-  box-shadow: 0 4px 12px rgba(36, 31, 29, 0.06);
-  outline: none;
-  flex-shrink: 0;
+.hero__caption-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 18px;
 }
 
-.hero__control-btn:hover {
-  background: var(--maroon);
-  color: #FFFFFF;
-  border-color: var(--maroon);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px -4px rgba(124, 35, 52, 0.4);
-}
-
-.hero__control-btn:active {
-  transform: translateY(0);
-}
-
-.hero__control-btn:focus-visible {
-  outline: 2px solid var(--maroon);
-  outline-offset: 2px;
-}
-
-.hero__indicators {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+.hero__caption-meta {
+  font-size: 13px;
+  color: #6B625D;
+  margin-top: 2px;
 }
 
 .hero__dots {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
-.hero__dots button,
 .hero__dot {
+  position: relative;
   width: 8px;
   height: 8px;
-  border-radius: 999px;
+  border-radius: 50%;
   border: none;
   padding: 0;
-  background: rgba(36, 31, 29, 0.2);
   cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.25, 1, 0.35, 1);
-  outline: none;
+  background: #E8E1DC;
 }
 
-.hero__dots button:hover,
-.hero__dot:hover {
-  background: var(--maroon-dark);
-}
-
-.hero__dots button.is-active,
 .hero__dot.is-active {
-  width: 26px;
-  background: var(--maroon);
-  box-shadow: 0 2px 8px rgba(124, 35, 52, 0.35);
+  background: #7C2334;
 }
 
-.hero__counter {
-  font-size: 13px;
-  font-weight: 700;
-  font-family: var(--font-sans);
-  color: var(--text-muted);
-  letter-spacing: 0.06em;
+/* invisible, larger tap target — the dot itself looks unchanged */
+.hero__dot::after {
+  content: '';
+  position: absolute;
+  inset: -6px -3px;
+}
+
+.hero__dot:focus-visible {
+  outline: 2px solid #7C2334;
+  outline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion: switch slides instantly (script.js also stops autoplay)
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hero.is-ready .reel__panel {
+    transition: none;
+  }
 }
 
 /* =========================================================
@@ -2407,6 +2176,169 @@ button {
 }
 
 /* =========================================================
+   HERO — MOBILE SWIPE CAROUSEL
+   (only active ≤ 768 px; desktop wheel is untouched)
+========================================================= */
+
+/* Always hide the mobile carousel on desktop/tablet */
+@media (min-width: 769px) {
+  .hero__mobile-reel {
+    display: none !important;
+  }
+}
+
+/* On mobile: stack hero, hide wheel, show swipe carousel */
+@media (max-width: 768px) {
+
+  /* --- Hero layout: single column --------------------------------- */
+  .hero {
+    grid-template-columns: 1fr;
+    overflow-x: hidden;
+  }
+
+  .hero__content {
+    padding: 36px var(--gutter) 24px;
+    max-width: 100%;
+    gap: 18px;
+  }
+
+  .hero__title {
+    font-size: 30px;
+    line-height: 1.2;
+  }
+
+  .hero__lead {
+    font-size: 15px;
+  }
+
+  .hero__stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px 24px;
+    margin-top: 20px;
+    padding-top: 20px;
+  }
+
+  .hero__stat-number {
+    font-size: 22px;
+  }
+
+  /* Hide the desktop wheel + its caption card */
+  .hero__media {
+    display: none !important;
+  }
+
+  /* --- Mobile swipe carousel -------------------------------------- */
+  .hero__mobile-reel {
+    display: block;
+    padding: 0 0 32px;
+    background: #FAF7F5;
+  }
+
+  /* Scrollable strip of slides — symmetric padding keeps card inside viewport */
+  .hmr__track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 14px;
+    /* equal padding left & right so first/last card are centred */
+    padding: 0 var(--gutter) 8px;
+    /* allow the track to be exactly as wide as its container */
+    box-sizing: border-box;
+  }
+
+  .hmr__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Each slide: landscape card that shows the FULL image without cropping */
+  .hmr__slide {
+    /* fill the container width minus both gutters */
+    flex: 0 0 calc(100% - 2 * var(--gutter));
+    scroll-snap-align: center;
+    border-radius: 16px;
+    overflow: hidden;
+    /* dark letterbox background for any thin bars if ratio doesn't match exactly */
+    background: #1a1614;
+    /* fixed height gives reliable landscape framing on all phones */
+    height: 270px;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 28px -8px rgba(36, 31, 29, 0.30);
+    transition: box-shadow 0.25s ease;
+  }
+
+  .hmr__slide.is-active {
+    box-shadow: 0 16px 40px -10px rgba(124, 35, 52, 0.30);
+  }
+
+  /* Show the entire landscape image — no cropping at all */
+  .hmr__slide img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    /* contain = whole image always visible, letterboxed if aspect differs */
+    object-fit: contain;
+    object-position: center center;
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  /* Caption row below the strip */
+  .hmr__caption {
+    padding: 16px var(--gutter) 0;
+  }
+
+  .hmr__caption-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 17px;
+    color: #241F1D;
+    margin-bottom: 3px;
+  }
+
+  .hmr__caption-meta {
+    font-size: 13px;
+    color: #6B625D;
+  }
+
+  /* Dot navigation */
+  .hmr__dots {
+    display: flex;
+    gap: 6px;
+    padding: 12px var(--gutter) 0;
+  }
+
+  .hmr__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    background: #E8E1DC;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .hmr__dot.is-active {
+    background: #7C2334;
+    transform: scale(1.25);
+  }
+
+  .hmr__dot::after {
+    content: '';
+    position: absolute;
+    inset: -6px -3px;
+  }
+}
+
+/* =========================================================
    RESPONSIVE
 ========================================================= */
 @media (max-width: 1080px) {
@@ -2452,46 +2384,6 @@ button {
 
   .topbar__location {
     display: none;
-  }
-
-  .hero {
-    grid-template-columns: 1fr;
-  }
-
-  .hero__copy {
-    padding: 40px var(--gutter) 24px;
-    max-width: none;
-  }
-
-  .hero__wheel-wrap {
-    padding: 16px var(--gutter) 40px;
-    overflow: hidden;
-    align-items: center;
-  }
-
-  .hero__categories {
-    justify-content: center;
-    margin-bottom: 16px;
-    width: 100%;
-  }
-
-  .hero__wheel-stage {
-    height: 380px;
-    width: 100%;
-    max-width: 520px;
-  }
-
-  .hero__wheel-track {
-    height: 100%;
-    width: 100%;
-  }
-
-  .wheel-badge {
-    display: none !important;
-  }
-
-  .hero__controls {
-    margin-top: 16px;
   }
 
   .why-choose {
@@ -2540,14 +2432,6 @@ button {
     gap: 10px;
   }
 
-  .hero__title {
-    font-size: 32px;
-  }
-
-  .hero__stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .services__grid,
   .gallery__grid,
   .testimonials__grid {
@@ -2591,71 +2475,6 @@ button {
 
   .modal__info-grid {
     grid-template-columns: 1fr;
-  }
-
-  .hero__wheel-wrap {
-    padding: 8px 12px 28px;
-    overflow: hidden;
-  }
-
-  .hero__categories {
-    justify-content: center;
-    gap: 6px;
-    margin-bottom: 12px;
-  }
-
-  .hero__category-btn {
-    font-size: 11.5px;
-    padding: 6px 12px;
-  }
-
-  .hero__wheel-stage {
-    height: 310px;
-    width: 100%;
-  }
-
-  .wheel-card {
-    border-radius: 20px;
-  }
-
-  .wheel-card__inner {
-    border-radius: 20px;
-  }
-
-  .wheel-card__title {
-    font-size: 15px;
-  }
-
-  .wheel-card__meta {
-    font-size: 11px;
-  }
-
-  .wheel-card__overlay {
-    padding: 34px 14px 14px;
-  }
-
-  .wheel-card__pill {
-    font-size: 10.5px;
-    padding: 4px 9px;
-  }
-
-  .wheel-card__verified {
-    font-size: 10px;
-    padding: 4px 8px;
-  }
-
-  .wheel-badge {
-    display: none !important;
-  }
-
-  .hero__controls {
-    margin-top: 14px;
-    max-width: 320px;
-  }
-
-  .hero__control-btn {
-    width: 38px;
-    height: 38px;
   }
 
   .partners::before,
