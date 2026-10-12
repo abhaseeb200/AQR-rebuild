@@ -16,7 +16,7 @@
     rel="stylesheet">
 
   <!-- Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=19">
+  <link rel="stylesheet" href="css/styles.css?v=60">
 </head>
 
 <body>
@@ -200,93 +200,172 @@
         </div>
       </div>
 
-      <!-- Right: the slider -->
+      <!-- Right: Vertical Slider matching User Wireframe -->
       <div class="hero__media">
-        <div class="reel" id="hero-reel">
-          <div class="reel__disc">
-            <div class="reel__hub">
-              <!-- 1 · Braces -->
-              <div class="reel__panel" data-title="Severe Crowding, Corrected"
-                data-meta="14-month treatment · Teen patient" data-scale="1.0755272618882517"
-                data-x="1.8653894040293522" data-y="0.4471630570451026">
-                <div class="reel__frame">
-                  <img src="assets/images/gallery/c1-after.jpg" alt="Damon braces result — severe crowding corrected"
-                    draggable="false">
+        <div class="hero-vslider" id="hero-vslider" aria-label="Patient treatment transformations vertical slider"
+          role="region">
+          <!-- Slider Header Controls -->
+          <div class="vslider__header">
+            <div class="vslider__header-title">
+              <span class="vslider__live-dot"></span>
+              <span>Clinical Transformations</span>
+            </div>
+            <div class="vslider__header-actions">
+              <!-- Counter: 01 / 06 -->
+              <span class="vslider__counter" id="vslider-counter">01 / 06</span>
+            </div>
+          </div>
+
+          <!-- Top Section: 2 Image Rows in Viewport (Wireframe Upper Box) -->
+          <div class="vslider__viewport" id="vslider-viewport" tabindex="0"
+            aria-label="Treatment results photos, use arrow keys to navigate">
+            <div class="vslider__track" id="vslider-track">
+              <!-- Row 1 · Damon Braces -->
+              <div class="vslider__row is-active" data-index="0" role="button" tabindex="0"
+                aria-label="Case 1: Damon Braces">
+                <img src="assets/images/gallery/c1-after.jpg" alt="Damon braces result — severe crowding corrected"
+                  class="vslider__row-img" draggable="false">
+                <div class="vslider__row-badge-pill">
+                  <span class="vslider__badge-dot"></span>
+                  <span>Damon Braces</span>
                 </div>
+                <span class="vslider__row-active-indicator">Active</span>
               </div>
 
-              <!-- 2 · Clear aligners -->
-              <div class="reel__panel" data-title="Spacing Closed with Spark Aligners"
-                data-meta="9-month treatment · Adult patient">
-                <div class="reel__frame">
-                  <img src="assets/images/gallery/c2-after.jpg" alt="Spark aligners result — spacing closed"
-                    draggable="false">
+              <!-- Row 2 · Spark Aligners -->
+              <div class="vslider__row" data-index="1" role="button" tabindex="0"
+                aria-label="Case 2: Spark Aligners">
+                <img src="assets/images/gallery/c2-after.jpg" alt="Spark aligners result — spacing closed"
+                  class="vslider__row-img" draggable="false" loading="lazy">
+                <div class="vslider__row-badge-pill">
+                  <span class="vslider__badge-dot"></span>
+                  <span>Spark Aligners</span>
                 </div>
+                <span class="vslider__row-active-indicator">Active</span>
               </div>
 
-              <!-- 3 · Functional -->
-              <div class="reel__panel" data-title="Early Crossbite Correction" data-meta="8-month treatment · Age 8">
-                <div class="reel__frame">
-                  <img src="assets/images/gallery/c3-after.jpg" alt="Palatal expander result — early crossbite corrected"
-                    draggable="false">
+              <!-- Row 3 · Palatal Expander -->
+              <div class="vslider__row" data-index="2" role="button" tabindex="0"
+                aria-label="Case 3: Palatal Expander">
+                <img src="assets/images/gallery/c3-after.jpg" alt="Palatal expander result — crossbite corrected"
+                  class="vslider__row-img" draggable="false" loading="lazy">
+                <div class="vslider__row-badge-pill">
+                  <span class="vslider__badge-dot"></span>
+                  <span>Palatal Expander</span>
                 </div>
+                <span class="vslider__row-active-indicator">Active</span>
               </div>
 
-              <!-- 4 · Airway -->
-              <div class="reel__panel" data-title="From Mouth-Breather to Nasal Breather"
-                data-meta="12-month treatment · Age 10" data-scale="1" data-x="0" data-y="0.005106608072916667">
-                <div class="reel__frame">
-                  <img src="assets/images/gallery/c4-after.webp"
-                    alt="Myofunctional therapy result — from mouth-breather to nasal breather" draggable="false">
+              <!-- Row 4 · Airway Orthodontics -->
+              <div class="vslider__row" data-index="3" role="button" tabindex="0"
+                aria-label="Case 4: Airway Orthodontics">
+                <img src="assets/images/gallery/c4-after.webp"
+                  alt="Myofunctional therapy result — from mouth-breather to nasal breather" class="vslider__row-img"
+                  draggable="false" loading="lazy">
+                <div class="vslider__row-badge-pill">
+                  <span class="vslider__badge-dot"></span>
+                  <span>Airway Orthodontics</span>
                 </div>
+                <span class="vslider__row-active-indicator">Active</span>
               </div>
 
-              <!-- 5 · TMJ -->
-              <div class="reel__panel" data-title="TMJ Pain Resolved with Splint Therapy"
-                data-meta="10-month treatment · Adult patient">
-                <div class="reel__frame">
-                  <img src="assets/images/gallery/c5-after.webp" alt="Splint therapy result — TMJ pain resolved"
-                    draggable="false">
+              <!-- Row 5 · TMJ Splint Therapy -->
+              <div class="vslider__row" data-index="4" role="button" tabindex="0"
+                aria-label="Case 5: Splint Therapy">
+                <img src="assets/images/gallery/c5-after.webp" alt="Splint therapy result — TMJ pain resolved"
+                  class="vslider__row-img" draggable="false" loading="lazy">
+                <div class="vslider__row-badge-pill">
+                  <span class="vslider__badge-dot"></span>
+                  <span>Splint Therapy</span>
+                </div>
+                <span class="vslider__row-active-indicator">Active</span>
+              </div>
+
+              <!-- Row 6 · Deep Overbite -->
+              <div class="vslider__row" data-index="5" role="button" tabindex="0"
+                aria-label="Case 6: Clear Aligners">
+                <img src="assets/images/gallery/c6-after.webp" alt="Clear aligners result — deep overbite corrected"
+                  class="vslider__row-img" draggable="false" loading="lazy">
+                <div class="vslider__row-badge-pill">
+                  <span class="vslider__badge-dot"></span>
+                  <span>Clear Aligners</span>
+                </div>
+                <span class="vslider__row-active-indicator">Active</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Section: Case Details & Dots Pagination (Wireframe Red Box) -->
+          <div class="vslider__caption-box" id="vslider-caption-box">
+            <div class="vslider__caption-content" id="vslider-caption-content" aria-live="polite">
+              <div class="vslider__caption-header">
+                <span class="vslider__caption-badge" id="vslider-caption-badge">Damon Braces</span>
+                <span class="vslider__caption-verified">
+                  <svg viewBox="0 0 20 20" width="12" height="12" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd" />
+                  </svg>
+                  Verified Real Result
+                </span>
+              </div>
+              <h3 class="vslider__caption-title" id="vslider-caption-title">Severe Crowding, Corrected</h3>
+              <div class="vslider__caption-meta" id="vslider-caption-meta">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span id="vslider-caption-meta-text">14-month treatment &middot; Teen patient</span>
+              </div>
+            </div>
+
+            <!-- Dots Pagination & Controls inside Red Box -->
+            <div class="vslider__caption-footer">
+              <div class="vslider__dots" id="vslider-dots" role="tablist" aria-label="Select case transformation">
+                <button type="button" class="vslider__dot is-active" data-index="0" aria-label="Case 1: Damon Braces"
+                  role="tab" aria-selected="true"></button>
+                <button type="button" class="vslider__dot" data-index="1" aria-label="Case 2: Spark Aligners"
+                  role="tab" aria-selected="false"></button>
+                <button type="button" class="vslider__dot" data-index="2" aria-label="Case 3: Palatal Expander"
+                  role="tab" aria-selected="false"></button>
+                <button type="button" class="vslider__dot" data-index="3" aria-label="Case 4: Airway Orthodontics"
+                  role="tab" aria-selected="false"></button>
+                <button type="button" class="vslider__dot" data-index="4" aria-label="Case 5: Splint Therapy"
+                  role="tab" aria-selected="false"></button>
+                <button type="button" class="vslider__dot" data-index="5" aria-label="Case 6: Clear Aligners"
+                  role="tab" aria-selected="false"></button>
+              </div>
+
+              <div class="vslider__caption-nav">
+                <a href="#gallery" class="vslider__caption-link" id="vslider-caption-link">
+                  <span>Explore Case</span>
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor"
+                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </a>
+                <div class="vslider__arrows">
+                  <button type="button" class="vslider__nav-btn vslider__nav-btn--prev" id="vslider-prev"
+                    aria-label="Previous case">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor"
+                      stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="18 15 12 9 6 15"></polyline>
+                    </svg>
+                  </button>
+                  <button type="button" class="vslider__nav-btn vslider__nav-btn--next" id="vslider-next"
+                    aria-label="Next case">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor"
+                      stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-        <!-- Caption card + dots -->
-        <div class="hero__caption">
-          <div aria-live="polite">
-            <div class="hero__caption-title" id="hero-caption-title">Severe Crowding, Corrected</div>
-            <div class="hero__caption-meta" id="hero-caption-meta">14-month treatment · Teen patient</div>
-          </div>
-          <div class="hero__dots" id="hero-dots" role="group" aria-label="Choose a treatment result"></div>
-        </div>
-      </div>
-
-      <!-- ── Mobile-only swipe carousel (hidden on desktop) ── -->
-      <div class="hero__mobile-reel" id="hero-mobile-reel" aria-label="Treatment results carousel">
-        <div class="hmr__track" id="hmr-track">
-          <div class="hmr__slide" data-title="Severe Crowding, Corrected" data-meta="14-month treatment · Teen patient">
-            <img src="assets/images/gallery/c1-after.jpg" alt="Damon braces result — severe crowding corrected" loading="lazy">
-          </div>
-          <div class="hmr__slide" data-title="Spacing Closed with Spark Aligners" data-meta="9-month treatment · Adult patient">
-            <img src="assets/images/gallery/c2-after.jpg" alt="Spark aligners result — spacing closed" loading="lazy">
-          </div>
-          <div class="hmr__slide" data-title="Early Crossbite Correction" data-meta="8-month treatment · Age 8">
-            <img src="assets/images/gallery/c3-after.jpg" alt="Palatal expander result — early crossbite corrected" loading="lazy">
-          </div>
-          <div class="hmr__slide" data-title="From Mouth-Breather to Nasal Breather" data-meta="12-month treatment · Age 10">
-            <img src="assets/images/gallery/c4-after.webp" alt="Myofunctional therapy result" loading="lazy">
-          </div>
-          <div class="hmr__slide" data-title="TMJ Pain Resolved with Splint Therapy" data-meta="10-month treatment · Adult patient">
-            <img src="assets/images/gallery/c5-after.webp" alt="Splint therapy result — TMJ pain resolved" loading="lazy">
-          </div>
-        </div>
-        <div class="hmr__caption">
-          <div class="hmr__caption-title" id="hmr-title">Severe Crowding, Corrected</div>
-          <div class="hmr__caption-meta" id="hmr-meta">14-month treatment · Teen patient</div>
-        </div>
-        <div class="hmr__dots" id="hmr-dots" role="group" aria-label="Choose a treatment result"></div>
       </div>
     </section>
 
@@ -535,7 +614,6 @@
               <span class="case-card__tag-sub">Adults</span>
             </div>
             <div class="case-card__title">Clear Aligners — Case 1</div>
-            <div class="case-card__meta">Clear Aligners &middot; 12 months</div>
             <div class="case-card__cta">
               <span>View Case Story</span>
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
@@ -583,7 +661,6 @@
               <span class="case-card__tag-sub">Teens</span>
             </div>
             <div class="case-card__title">Clear Aligners — Case 2</div>
-            <div class="case-card__meta">Clear Aligners &middot; 14 months</div>
             <div class="case-card__cta">
               <span>View Case Story</span>
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
@@ -631,7 +708,6 @@
               <span class="case-card__tag-sub">Adults</span>
             </div>
             <div class="case-card__title">Clear Aligners — Case 3</div>
-            <div class="case-card__meta">Clear Aligners &middot; 10 months</div>
             <div class="case-card__cta">
               <span>View Case Story</span>
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
@@ -679,7 +755,6 @@
               <span class="case-card__tag-sub">Teens</span>
             </div>
             <div class="case-card__title">Clear Aligners — Case 4</div>
-            <div class="case-card__meta">Clear Aligners &middot; 15 months</div>
             <div class="case-card__cta">
               <span>View Case Story</span>
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
@@ -727,7 +802,6 @@
               <span class="case-card__tag-sub">Adults</span>
             </div>
             <div class="case-card__title">Clear Aligners — Case 5</div>
-            <div class="case-card__meta">Clear Aligners &middot; 13 months</div>
             <div class="case-card__cta">
               <span>View Case Story</span>
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
@@ -775,7 +849,6 @@
               <span class="case-card__tag-sub">Adults</span>
             </div>
             <div class="case-card__title">Clear Aligners — Case 6</div>
-            <div class="case-card__meta">Clear Aligners &middot; 11 months</div>
             <div class="case-card__cta">
               <span>View Case Story</span>
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
@@ -824,7 +897,6 @@
               <span class="case-card__tag-sub">Teens</span>
             </div>
             <div class="case-card__title">Braces — Case 1</div>
-            <div class="case-card__meta">Damon Braces &middot; 16 months</div>
             <div class="case-card__cta">
               <span>View Case Story</span>
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
@@ -872,7 +944,6 @@
               <span class="case-card__tag-sub">Kids</span>
             </div>
             <div class="case-card__title">Braces — Case 2</div>
-            <div class="case-card__meta">Braces for Kids &middot; 12 months</div>
             <div class="case-card__cta">
               <span>View Case Story</span>
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
@@ -921,7 +992,6 @@
               <span class="case-card__tag-sub">Adults</span>
             </div>
             <div class="case-card__title">Braces — Case 3</div>
-            <div class="case-card__meta">Specialist Braces &middot; 18 months</div>
             <div class="case-card__cta">
               <span>View Case Story</span>
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
@@ -1323,10 +1393,7 @@
               <div class="modal__info-label">Treatment</div>
               <div class="modal__info-value" id="modalInfoTreatment"></div>
             </div>
-            <div>
-              <div class="modal__info-label">Duration</div>
-              <div class="modal__info-value" id="modalInfoDuration"></div>
-            </div>
+
             <div>
               <div class="modal__info-label">Patient</div>
               <div class="modal__info-value" id="modalInfoAgeGroup"></div>
@@ -1338,7 +1405,7 @@
     </div>
   </div>
 
-  <script src="js/script.js?v=19"></script>
+  <script src="js/script.js?v=60"></script>
 </body>
 
 </html>

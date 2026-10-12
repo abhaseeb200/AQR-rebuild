@@ -736,24 +736,29 @@ button {
 }
 
 /* =========================================================
-   HERO
+   HERO SECTION (DESKTOP DEFAULT)
 ========================================================= */
 .hero,
 .hero *,
 .hero *::before,
 .hero *::after {
-  box-sizing: content-box;
+  box-sizing: border-box;
 }
 
 .hero {
+  --header-desktop-height: 120px;
+  min-height: calc(100vh - var(--header-desktop-height));
+  min-height: calc(100dvh - var(--header-desktop-height));
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0;
-  align-items: stretch;
+  align-items: center;
   background: #FAF7F5;
   font-family: 'Mulish', sans-serif;
   color: #241F1D;
   width: 100%;
+  padding: 24px 0;
+  box-sizing: border-box;
   overflow-x: hidden;
   overflow-x: clip;
 }
@@ -762,12 +767,12 @@ button {
    Left column — copy
    -------------------------------------------------------------------------- */
 .hero__content {
-  padding: 48px 64px;
+  padding: 24px 40px 24px 64px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 24px;
-  max-width: 640px;
+  gap: 16px;
+  max-width: 650px;
 }
 
 .hero__eyebrow {
@@ -780,15 +785,15 @@ button {
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  font-size: 13px;
-  padding: 8px 16px;
+  font-size: 12.5px;
+  padding: 6px 14px;
   border-radius: 999px;
 }
 
 .hero__title {
   font-family: 'Mulish', sans-serif;
-  font-size: 48px;
-  line-height: 1.14;
+  font-size: 40px;
+  line-height: 1.15;
   letter-spacing: -0.02em;
   margin: 0;
   color: #241F1D;
@@ -796,8 +801,8 @@ button {
 }
 
 .hero__lead {
-  font-size: 18px;
-  line-height: 1.6;
+  font-size: 17px;
+  line-height: 1.55;
   color: #6B625D;
   margin: 0;
 }
@@ -805,205 +810,451 @@ button {
 .hero__actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   flex-wrap: wrap;
-  margin-top: 8px;
+  margin-top: 4px;
 }
 
 /* Stats row */
 .hero__stats {
   display: grid;
   grid-template-columns: repeat(4, auto);
-  gap: 32px;
-  margin-top: 28px;
-  padding-top: 28px;
+  gap: 28px;
+  margin-top: 18px;
+  padding-top: 18px;
   border-top: 1px solid #E8E1DC;
 }
 
 .hero__stat-number {
   font-family: 'Playfair Display', serif;
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
   color: #7C2334;
 }
 
 .hero__stat-label {
-  font-size: 12px;
+  font-size: 11.5px;
   color: #6B625D;
   margin-top: 2px;
 }
 
 /* --------------------------------------------------------------------------
-   Right column — slider
+   Right column — Multi-Card Square Vertical Slider (3 per view)
    -------------------------------------------------------------------------- */
 .hero__media {
   position: relative;
-  /* padding: 40px 0 48px 48px; */
-  padding: 0;
+  padding: 16px 48px 16px 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  justify-content: flex-end;
-  overflow: visible;
-}
-
-/* The reel window. Its height is set by script.js (≈ 1.05 × its width);
-   the fallback below is what shows before the script runs. */
-.reel {
-  position: relative;
-  height: 483px;
-  width: 100%;
-  overflow: hidden;
-  min-width: 1px;
-}
-
-/* One huge circle whose centre sits far to the right of the column.
-   script.js sizes/positions .reel__disc and .reel__hub.
-   The disc's circular overflow carves the curved outer edge of the reel. */
-.reel__disc {
-  position: absolute;
-  border-radius: 50%;
-  overflow: hidden;
-}
-
-.reel__hub {
-  position: absolute;
-  width: 0;
-  height: 0;
-}
-
-/* Each photo is a wedge of that circle: rotated about the hub and clipped
-   to a radial slice. script.js sets width/height/transform/clip-path/
-   opacity/z-index/filter. */
-.reel__panel {
-  position: absolute;
-  left: 0;
-  top: 0;
-  transform-origin: 0 0;
-  cursor: pointer;
-  overflow: hidden;
-  background: #241F1D;
-}
-
-/* Turned on by script.js once the first layout is done, so nothing
-   animates on page load or while the window is being resized. */
-.hero.is-ready .reel__panel {
-  transition: transform 0.8s cubic-bezier(.22, 1, .36, 1),
-    opacity 0.8s ease,
-    filter 0.8s ease;
-}
-
-/* Photo frame: the image is positioned/zoomed by script.js */
-.reel__frame {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  background: rgba(127, 127, 127, .08);
-}
-
-.reel__frame img {
-  position: absolute;
-  max-width: none;
-  transform: translate(-50%, -50%);
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-/* Placeholder for slides that don't have a photo yet */
-.reel__empty {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  gap: 6px;
-  text-align: center;
-  padding: 12px;
+  align-items: center;
+  width: 100%;
   box-sizing: border-box;
-  font: 13px/1.3 system-ui, -apple-system, sans-serif;
-  color: inherit;
-  user-select: none;
 }
 
-.reel__empty svg {
-  opacity: .45;
+/* Ensure modern box-sizing for vertical slider */
+.hero-vslider,
+.hero-vslider *,
+.hero-vslider *::before,
+.hero-vslider *::after {
+  box-sizing: border-box;
 }
 
-.reel__empty-caption {
-  max-width: 90%;
-  font-weight: 500;
-  letter-spacing: .01em;
-  opacity: .75;
+.hero-vslider {
+  --vslider-rows-visible: 2;
+  --vslider-gap: 10px;
+  --vslider-viewport-height: 480px;
+  --vslider-row-height: calc((var(--vslider-viewport-height) - (var(--vslider-rows-visible) - 1) * var(--vslider-gap)) / var(--vslider-rows-visible));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 530px;
+  margin: 0 auto;
 }
 
-/* --------------------------------------------------------------------------
-   Caption card + dots
-   -------------------------------------------------------------------------- */
-.hero__caption {
-  background: #fff;
-  border: 1px solid #E8E1DC;
-  border-radius: 16px;
-  padding: 18px 22px;
+@media (min-width: 1366px) {
+  .hero-vslider {
+    --vslider-viewport-height: 520px;
+    --vslider-gap: 10px;
+    max-width: 550px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .hero-vslider {
+    --vslider-viewport-height: 560px;
+    --vslider-gap: 12px;
+    max-width: 580px;
+  }
+}
+
+/* Header bar with title and counter */
+.vslider__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  box-shadow: 0 20px 50px -30px rgba(36, 31, 29, 0.4);
-  max-width: 520px;
+  padding: 2px 4px;
+  width: 100%;
 }
 
-.hero__caption-title {
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
-  font-size: 18px;
-}
-
-.hero__caption-meta {
+.vslider__header-title {
   font-size: 13px;
-  color: #6B625D;
-  margin-top: 2px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #7C2334;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
 }
 
-.hero__dots {
-  display: flex;
-  gap: 6px;
-}
-
-.hero__dot {
-  position: relative;
+.vslider__live-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
+  background: #7C2334;
+  box-shadow: 0 0 0 3px rgba(124, 35, 52, 0.2);
+  animation: vsliderPulse 2s infinite ease-in-out;
+}
+
+@keyframes vsliderPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 3px rgba(124, 35, 52, 0.2);
+  }
+  50% {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 6px rgba(124, 35, 52, 0.08);
+  }
+}
+
+.vslider__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vslider__counter {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #241F1D;
+  user-select: none;
+}
+
+/* Top Section: Viewport for 3 image rows (Wireframe Upper Box) */
+.vslider__viewport {
+  position: relative;
+  width: 100%;
+  height: var(--vslider-viewport-height);
+  border-radius: 20px;
+  overflow: hidden;
+  background: #1A1614;
+  box-shadow: 0 16px 36px -12px rgba(36, 31, 29, 0.14), 0 0 0 1px rgba(124, 35, 52, 0.12);
+  outline: none;
+  padding: 0;
+}
+
+.vslider__viewport:focus-visible {
+  box-shadow: 0 16px 36px -12px rgba(36, 31, 29, 0.14), 0 0 0 2px #7C2334;
+}
+
+/* Vertical track containing all image rows */
+.vslider__track {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vslider-gap);
+  width: 100%;
+  position: relative;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/* Individual Image Row (pure image banner, clinical focus) */
+.vslider__row {
+  position: relative;
+  height: var(--vslider-row-height);
+  flex: 0 0 var(--vslider-row-height);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  background: #241F1D;
+}
+
+.vslider__row:not(.is-active) {
+  opacity: 0.78;
+  filter: brightness(0.96);
+}
+
+.vslider__row:not(.is-active):hover {
+  opacity: 0.96;
+  filter: brightness(1);
+  transform: scale(1.01);
+}
+
+.vslider__row.is-active {
+  opacity: 1;
+  filter: brightness(1);
+  border-color: #7C2334;
+  box-shadow: 0 6px 20px rgba(124, 35, 52, 0.3), 0 0 0 1px #7C2334;
+  transform: scale(1.015);
+  z-index: 2;
+}
+
+.vslider__row-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 48%;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.vslider__row:hover .vslider__row-img {
+  transform: scale(1.04);
+}
+
+.vslider__row-badge-pill {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(26, 22, 20, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #FAF7F5;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+  line-height: 1;
+}
+
+.vslider__badge-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #E8B4BC;
+}
+
+.vslider__row-active-indicator {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #7C2334;
+  color: #FFFFFF;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: none;
+  box-shadow: 0 2px 6px rgba(124, 35, 52, 0.4);
+  line-height: 1;
+}
+
+.vslider__row.is-active .vslider__row-active-indicator {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* =========================================================
+   Bottom Section: Case Details & Dots (Wireframe Red Box)
+========================================================= */
+.vslider__caption-box {
+  position: relative;
+  background: #FFFFFF;
+  border: 2px solid #7C2334;
+  border-radius: 15px;
+  padding: 6px 14px;
+  box-shadow: 0 8px 24px -6px rgba(124, 35, 52, 0.16), 0 0 0 1px rgba(124, 35, 52, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  transition: all 0.3s ease;
+}
+
+.vslider__caption-box:hover {
+  box-shadow: 0 12px 28px -6px rgba(124, 35, 52, 0.22);
+  border-color: #551622;
+}
+
+.vslider__caption-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.vslider__caption-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.vslider__caption-badge {
+  background: #F3E4E7;
+  color: #7C2334;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  border-radius: 999px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+
+.vslider__caption-verified {
+  font-size: 10px;
+  font-weight: 700;
+  color: #16a34a;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1;
+}
+
+.vslider__caption-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 15.5px;
+  font-weight: 700;
+  color: #241F1D;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.vslider__caption-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #6B625D;
+  font-weight: 500;
+  margin: 0;
+}
+
+.vslider__caption-meta svg {
+  color: #7C2334;
+  flex-shrink: 0;
+}
+
+/* Footer with dots pagination & navigation inside red box */
+.vslider__caption-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 4px;
+  border-top: 1px solid #EFE8E3;
+}
+
+.vslider__dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.vslider__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #D8CECA;
   border: none;
   padding: 0;
   cursor: pointer;
-  background: #E8E1DC;
+  transition: all 0.25s ease;
 }
 
-.hero__dot.is-active {
+.vslider__dot:hover {
   background: #7C2334;
+  transform: scale(1.2);
 }
 
-/* invisible, larger tap target — the dot itself looks unchanged */
-.hero__dot::after {
-  content: '';
-  position: absolute;
-  inset: -6px -3px;
+.vslider__dot.is-active {
+  width: 22px;
+  height: 8px;
+  border-radius: 999px;
+  background: #7C2334;
+  box-shadow: 0 2px 6px rgba(124, 35, 52, 0.35);
 }
 
-.hero__dot:focus-visible {
+.vslider__caption-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vslider__caption-link {
+  font-size: 12px;
+  font-weight: 700;
+  color: #7C2334;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: gap 0.2s ease, color 0.2s ease;
+}
+
+.vslider__caption-link:hover {
+  color: #551622;
+  gap: 7px;
+}
+
+.vslider__arrows {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.vslider__nav-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #E2D8D1;
+  background: #FFFFFF;
+  color: #241F1D;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.vslider__nav-btn:hover {
+  background: #7C2334;
+  color: #FFFFFF;
+  border-color: #7C2334;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(124, 35, 52, 0.22);
+}
+
+.vslider__nav-btn:focus-visible {
   outline: 2px solid #7C2334;
-  outline-offset: 3px;
+  outline-offset: 2px;
 }
 
-/* --------------------------------------------------------------------------
-   Reduced motion: switch slides instantly (script.js also stops autoplay)
-   -------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  .hero.is-ready .reel__panel {
-    transition: none;
+  .vslider__track,
+  .vslider__card-img,
+  .vslider__live-dot {
+    transition: none !important;
+    animation: none !important;
   }
 }
 
@@ -1300,8 +1551,8 @@ button {
 }
 
 .comparison-slider--lg {
-  height: 380px;
-  max-height: 52vh;
+  height: 440px;
+  max-height: 58vh;
   border-radius: 14px;
 }
 
@@ -2176,30 +2427,97 @@ button {
 }
 
 /* =========================================================
-   HERO — MOBILE SWIPE CAROUSEL
-   (only active ≤ 768 px; desktop wheel is untouched)
+   HERO & VERTICAL SLIDER RESPONSIVE RULES
 ========================================================= */
 
-/* Always hide the mobile carousel on desktop/tablet */
-@media (min-width: 769px) {
-  .hero__mobile-reel {
-    display: none !important;
+/* Tablet & medium screen adjustments (769px to 1080px) */
+@media (max-width: 1080px) and (min-width: 769px) {
+  .hero {
+    min-height: calc(100vh - 117px);
+    min-height: calc(100dvh - 117px);
+    padding: 24px 0;
+  }
+
+  .hero__content {
+    padding: 32px 24px 32px 36px;
+    gap: 18px;
+  }
+
+  .hero__title {
+    font-size: 36px;
+  }
+
+  .hero__media {
+    padding: 24px 32px 24px 16px;
+  }
+
+  .hero-vslider {
+    --vslider-viewport-height: 480px;
+    --vslider-gap: 10px;
+    max-width: 490px;
   }
 }
 
-/* On mobile: stack hero, hide wheel, show swipe carousel */
-@media (max-width: 768px) {
+@media (max-width: 968px) and (min-width: 769px) {
+  .hero {
+    --header-height: 64px;
+    min-height: calc(100vh - var(--header-height));
+    min-height: calc(100dvh - var(--header-height));
+    padding: 20px 0;
+  }
 
+  .hero__content {
+    padding: 24px 16px 24px 24px;
+    gap: 16px;
+  }
+
+  .hero__title {
+    font-size: 32px;
+  }
+
+  .hero__lead {
+    font-size: 16px;
+  }
+
+  .hero__stats {
+    gap: 20px;
+    margin-top: 18px;
+    padding-top: 18px;
+  }
+
+  .hero__stat-number {
+    font-size: 22px;
+  }
+
+  .hero__media {
+    padding: 20px 20px 20px 12px;
+  }
+
+  .hero-vslider {
+    --vslider-viewport-height: 460px;
+    --vslider-gap: 8px;
+    max-width: 450px;
+  }
+
+  .vslider__caption-title {
+    font-size: 17px;
+  }
+}
+
+/* Mobile: single column stack (≤ 768px) */
+@media (max-width: 768px) {
   /* --- Hero layout: single column --------------------------------- */
   .hero {
     grid-template-columns: 1fr;
+    min-height: auto;
+    padding: 20px 0 32px;
     overflow-x: hidden;
   }
 
   .hero__content {
-    padding: 36px var(--gutter) 24px;
+    padding: 28px var(--gutter) 20px;
     max-width: 100%;
-    gap: 18px;
+    gap: 16px;
   }
 
   .hero__title {
@@ -2222,119 +2540,105 @@ button {
     font-size: 22px;
   }
 
-  /* Hide the desktop wheel + its caption card */
+  /* Right column stacks cleanly below content */
   .hero__media {
-    display: none !important;
-  }
-
-  /* --- Mobile swipe carousel -------------------------------------- */
-  .hero__mobile-reel {
-    display: block;
-    padding: 0 0 32px;
-    background: #FAF7F5;
-  }
-
-  /* Scrollable strip of slides — symmetric padding keeps card inside viewport */
-  .hmr__track {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    gap: 14px;
-    /* equal padding left & right so first/last card are centred */
-    padding: 0 var(--gutter) 8px;
-    /* allow the track to be exactly as wide as its container */
-    box-sizing: border-box;
-  }
-
-  .hmr__track::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Each slide: landscape card that shows the FULL image without cropping */
-  .hmr__slide {
-    /* fill the container width minus both gutters */
-    flex: 0 0 calc(100% - 2 * var(--gutter));
-    scroll-snap-align: center;
-    border-radius: 16px;
-    overflow: hidden;
-    /* dark letterbox background for any thin bars if ratio doesn't match exactly */
-    background: #1a1614;
-    /* fixed height gives reliable landscape framing on all phones */
-    height: 270px;
-    position: relative;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 10px 28px -8px rgba(36, 31, 29, 0.30);
-    transition: box-shadow 0.25s ease;
-  }
-
-  .hmr__slide.is-active {
-    box-shadow: 0 16px 40px -10px rgba(124, 35, 52, 0.30);
-  }
-
-  /* Show the entire landscape image — no cropping at all */
-  .hmr__slide img {
-    position: absolute;
-    inset: 0;
+    display: flex !important;
+    padding: 8px var(--gutter) 32px;
     width: 100%;
-    height: 100%;
-    /* contain = whole image always visible, letterboxed if aspect differs */
-    object-fit: contain;
-    object-position: center center;
-    display: block;
-    user-select: none;
-    -webkit-user-drag: none;
+    justify-content: center;
   }
 
-  /* Caption row below the strip */
-  .hmr__caption {
-    padding: 16px var(--gutter) 0;
+  .hero-vslider {
+    max-width: 100%;
+    --vslider-viewport-height: 420px;
+    --vslider-gap: 8px;
   }
 
-  .hmr__caption-title {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    font-size: 17px;
-    color: #241F1D;
-    margin-bottom: 3px;
+  .vslider__viewport {
+    border-radius: 18px;
   }
 
-  .hmr__caption-meta {
-    font-size: 13px;
-    color: #6B625D;
+  .vslider__caption-box {
+    padding: 14px 16px;
+    border-radius: 16px;
+    gap: 10px;
   }
 
-  /* Dot navigation */
-  .hmr__dots {
-    display: flex;
-    gap: 6px;
-    padding: 12px var(--gutter) 0;
+  .vslider__caption-title {
+    font-size: 16.5px;
+    line-height: 1.25;
   }
 
-  .hmr__dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    background: #E8E1DC;
-    transition: background 0.2s ease, transform 0.2s ease;
+  .vslider__caption-meta {
+    font-size: 12px;
   }
 
-  .hmr__dot.is-active {
-    background: #7C2334;
-    transform: scale(1.25);
+  .vslider__caption-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+}
+
+/* Extra small mobile (≤ 480px) */
+@media (max-width: 480px) {
+  .hero__title {
+    font-size: 26px;
   }
 
-  .hmr__dot::after {
-    content: '';
-    position: absolute;
-    inset: -6px -3px;
+  .hero-vslider {
+    --vslider-viewport-height: 380px;
+    --vslider-gap: 6px;
+  }
+
+  .vslider__viewport {
+    border-radius: 16px;
+  }
+
+  .vslider__header-title {
+    font-size: 11.5px;
+  }
+
+  .vslider__counter {
+    font-size: 11px;
+  }
+
+  .vslider__caption-box {
+    padding: 12px 14px;
+    border-radius: 14px;
+    gap: 8px;
+  }
+
+  .vslider__caption-title {
+    font-size: 15px;
+    line-height: 1.2;
+  }
+
+  .vslider__caption-badge {
+    font-size: 9.5px;
+    padding: 2px 7px;
+  }
+
+  .vslider__caption-meta {
+    font-size: 11px;
+  }
+
+  .vslider__caption-link {
+    font-size: 11px;
+  }
+
+  .vslider__nav-btn {
+    width: 26px;
+    height: 26px;
+  }
+
+  .vslider__dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .vslider__dot.is-active {
+    width: 18px;
+    height: 6px;
   }
 }
 
