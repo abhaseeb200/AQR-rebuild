@@ -247,9 +247,11 @@
       }, { passive: true });
     }
 
-    // Autoplay controller
+    // Autoplay controller (disabled for now)
+    var autoplayEnabled = false;
+
     function startAutoplay() {
-      if (reduceMotion) return;
+      if (!autoplayEnabled || reduceMotion) return;
       clearInterval(autoplayTimer);
       autoplayTimer = setInterval(function () {
         if (!isPaused) {
@@ -263,6 +265,7 @@
     }
 
     function resumeAutoplay() {
+      if (!autoplayEnabled) return;
       isPaused = false;
     }
 
@@ -287,7 +290,10 @@
 
     // Initial setup
     updateUI(true);
-    startAutoplay();
+    // Auto sliding stopped for now
+    if (autoplayEnabled) {
+      startAutoplay();
+    }
   })();
 
   /* =========================================================

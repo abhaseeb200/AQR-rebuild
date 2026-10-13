@@ -920,10 +920,13 @@ button {
 }
 
 @keyframes vsliderPulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
     box-shadow: 0 0 0 3px rgba(124, 35, 52, 0.2);
   }
+
   50% {
     transform: scale(1.15);
     box-shadow: 0 0 0 6px rgba(124, 35, 52, 0.08);
@@ -1250,6 +1253,7 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .vslider__track,
   .vslider__card-img,
   .vslider__live-dot {
@@ -2506,6 +2510,7 @@ button {
 
 /* Mobile: single column stack (≤ 768px) */
 @media (max-width: 768px) {
+
   /* --- Hero layout: single column --------------------------------- */
   .hero {
     grid-template-columns: 1fr;
