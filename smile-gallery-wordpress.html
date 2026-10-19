@@ -6,7 +6,13 @@
 
 <style>
   /* --- Design Tokens & Base --- */
-  @import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400..800;1,400..800&family=Playfair+Display:ital,wght@0,500..800;1,500..800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400..800;1,400..800&family=Young+Serif&display=swap');
+
+  .young-serif-regular {
+    font-family: "Young Serif", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
 
   #gallery,
   #caseModal {
@@ -19,10 +25,15 @@
     --border: #E8E1DC;
     --text: #241F1D;
     --text-muted: #6B625D;
-    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-serif: "Young Serif", Georgia, serif;
     --font-sans: 'Mulish', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-size-body: clamp(16.5px, 15.75px + 0.2vw, 18px);
+    --line-height-body: 1.63;
+    --caption-floor: 13.5px;
     --gutter: 48px;
     font-family: var(--font-sans);
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
     color: var(--text);
     box-sizing: border-box;
   }
@@ -67,24 +78,24 @@
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    font-size: 12px;
+    font-size: var(--caption-floor);
     margin-bottom: 12px;
   }
 
   .section-head h2 {
     font-family: var(--font-serif);
     font-size: 36px;
-    font-weight: 700;
+    font-weight: 400;
     color: var(--text);
     margin: 0 0 12px;
     line-height: 1.25;
   }
 
   .section-lede {
-    font-size: 16px;
+    font-size: var(--font-size-body);
     color: var(--text-muted);
     margin: 0;
-    line-height: 1.6;
+    line-height: var(--line-height-body);
   }
 
   /* --- Filter Pills --- */
@@ -175,7 +186,8 @@
   .case-card__media {
     position: relative;
     width: 100%;
-    height: 230px;
+    aspect-ratio: 3 / 2;
+    height: auto;
     background: #241F1D;
     overflow: hidden;
     border-radius: 17px 17px 0 0;
@@ -186,6 +198,7 @@
     position: relative;
     width: 100%;
     height: 100%;
+    aspect-ratio: 3 / 2;
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
@@ -196,8 +209,10 @@
   }
 
   .comparison-slider--lg {
-    height: 380px;
-    max-height: 52vh;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    height: auto;
+    max-height: 65vh;
     border-radius: 14px;
   }
 
@@ -278,7 +293,7 @@
     z-index: 4;
     padding: 5px 12px;
     border-radius: 999px;
-    font-size: 10.5px;
+    font-size: var(--caption-floor);
     font-weight: 800;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -315,7 +330,7 @@
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     color: #ffffff;
-    font-size: 11px;
+    font-size: var(--caption-floor);
     font-weight: 700;
     letter-spacing: 0.03em;
     padding: 5px 14px;
@@ -351,15 +366,15 @@
     display: inline-block;
     background: var(--maroon);
     color: #fff;
-    font-size: 11px;
+    font-size: var(--caption-floor);
     font-weight: 700;
-    padding: 5px 10px;
+    padding: 5px 12px;
     border-radius: 999px;
     line-height: 1;
   }
 
   .case-card__tag-sub {
-    font-size: 11px;
+    font-size: var(--caption-floor);
     font-weight: 700;
     color: var(--text-muted);
     background: var(--cream);
@@ -370,18 +385,18 @@
 
   .case-card__title {
     font-family: var(--font-serif);
-    font-weight: 700;
-    font-size: 17px;
+    font-weight: 400;
+    font-size: 18px;
     line-height: 1.35;
     color: var(--text);
     margin-bottom: 0;
   }
 
   .case-card__meta {
-    font-size: 13px;
+    font-size: var(--caption-floor);
     color: var(--text-muted);
     margin-top: 6px;
-    line-height: 1.4;
+    line-height: var(--line-height-body);
   }
 
   .case-card__cta {
@@ -391,7 +406,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 13px;
+    font-size: var(--caption-floor);
     font-weight: 800;
     color: var(--maroon);
   }
@@ -441,7 +456,7 @@
 
   .modal__title {
     font-family: var(--font-serif);
-    font-weight: 700;
+    font-weight: 400;
     font-size: 22px;
     margin-top: 8px;
     color: var(--text);
@@ -505,7 +520,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 12.5px;
+    font-size: var(--caption-floor);
     color: var(--text-muted);
     margin-bottom: 18px;
     font-weight: 500;
@@ -531,7 +546,7 @@
   }
 
   .modal__photo-label {
-    font-size: 11px;
+    font-size: var(--caption-floor);
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -546,7 +561,8 @@
   .modal__photo-frame {
     border-radius: 12px;
     overflow: hidden;
-    height: 180px;
+    aspect-ratio: 3 / 2;
+    height: auto;
     background: #EDE6E1;
     border: 1px solid var(--border);
   }
@@ -566,7 +582,7 @@
   }
 
   .modal__info-label {
-    font-size: 11px;
+    font-size: var(--caption-floor);
     font-weight: 800;
     text-transform: uppercase;
     color: var(--text-muted);
@@ -579,8 +595,8 @@
   }
 
   #modalInfoDescription {
-    font-size: 14.5px;
-    line-height: 1.7;
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
     color: var(--text-muted);
   }
 
@@ -1290,14 +1306,15 @@
       var lastFocusedEl = null;
 
       function openModal(card) {
-        var data = card.dataset;
+        if (!card) return;
+        var data = card.dataset || {};
 
-        modalCondition.textContent = data.condition || '';
-        modalTitle.textContent = data.title || '';
-        modalInfoTreatment.textContent = data.treatment || '';
-        modalInfoDuration.textContent = data.duration || '';
-        modalInfoAgeGroup.textContent = data.agegroup || '';
-        modalInfoDescription.textContent = data.description || '';
+        if (modalCondition) modalCondition.textContent = data.condition || '';
+        if (modalTitle) modalTitle.textContent = data.title || '';
+        if (modalInfoTreatment) modalInfoTreatment.textContent = data.treatment || '';
+        if (modalInfoDuration) modalInfoDuration.textContent = data.duration || '';
+        if (modalInfoAgeGroup) modalInfoAgeGroup.textContent = data.agegroup || '';
+        if (modalInfoDescription) modalInfoDescription.textContent = data.description || '';
 
         var beforeSrc = card.getAttribute('data-before') || '';
         var afterSrc = card.getAttribute('data-after') || '';
@@ -1310,19 +1327,19 @@
 
         if (modalImgBefore && beforeSrc) {
           modalImgBefore.src = beforeSrc;
-          modalImgBefore.alt = 'Before Treatment — ' + data.title;
+          modalImgBefore.alt = 'Before Treatment — ' + (data.title || '');
         }
         if (modalImgAfter && afterSrc) {
           modalImgAfter.src = afterSrc;
-          modalImgAfter.alt = 'After Result — ' + data.title;
+          modalImgAfter.alt = 'After Result — ' + (data.title || '');
         }
         if (modalThumbBefore && beforeSrc) {
           modalThumbBefore.src = beforeSrc;
-          modalThumbBefore.alt = 'Before Treatment — ' + data.title;
+          modalThumbBefore.alt = 'Before Treatment — ' + (data.title || '');
         }
         if (modalThumbAfter && afterSrc) {
           modalThumbAfter.src = afterSrc;
-          modalThumbAfter.alt = 'After Result — ' + data.title;
+          modalThumbAfter.alt = 'After Result — ' + (data.title || '');
         }
         if (modalSlider) {
           modalSlider.style.setProperty('--pos', '50%');
@@ -1339,12 +1356,13 @@
         setActiveTab('photos');
 
         lastFocusedEl = document.activeElement;
-        modal.hidden = false;
-        modalClose.focus();
+        if (modal) modal.hidden = false;
+        if (modalClose) modalClose.focus();
         document.addEventListener('keydown', onModalKeydown);
       }
 
       function buildTabs() {
+        if (!modalTabs) return;
         modalTabs.innerHTML = '';
         currentTabs.forEach(function (tab) {
           var btn = document.createElement('button');
@@ -1357,15 +1375,17 @@
       }
 
       function setActiveTab(tab) {
-        modalTabs.querySelectorAll('button').forEach(function (btn) {
-          btn.classList.toggle('is-active', btn.getAttribute('data-tab') === tab);
-        });
-        modalPanelPhotos.hidden = tab !== 'photos';
-        modalPanelInfo.hidden = tab !== 'info';
+        if (modalTabs) {
+          modalTabs.querySelectorAll('button').forEach(function (btn) {
+            btn.classList.toggle('is-active', btn.getAttribute('data-tab') === tab);
+          });
+        }
+        if (modalPanelPhotos) modalPanelPhotos.hidden = tab !== 'photos';
+        if (modalPanelInfo) modalPanelInfo.hidden = tab !== 'info';
       }
 
       function closeModal() {
-        modal.hidden = true;
+        if (modal) modal.hidden = true;
         document.removeEventListener('keydown', onModalKeydown);
         if (lastFocusedEl) lastFocusedEl.focus();
       }

@@ -12,13 +12,20 @@
   /* =========================================================
      1. HERO VERTICAL SLIDER (Wireframe 3 Image Rows + Caption Box)
   ========================================================= */
+  /* =========================================================
+     HERO CLINICAL TRANSFORMATIONS VERTICAL SLIDER (3 VISIBLE ROWS)
+     Center card active, colored & popped forward with prominent shadow.
+     Top & bottom cards behind and black & white.
+  ========================================================= */
   (function () {
     var vslider = document.getElementById('hero-vslider');
     if (!vslider) return;
 
     var viewport = document.getElementById('vslider-viewport');
     var track = document.getElementById('vslider-track');
-    var rows = Array.prototype.slice.call(track.querySelectorAll('.vslider__row'));
+    if (!viewport || !track) return;
+
+    var originalRows = Array.prototype.slice.call(track.querySelectorAll('.vslider__row'));
     var prevBtn = document.getElementById('vslider-prev');
     var nextBtn = document.getElementById('vslider-next');
     var counterEl = document.getElementById('vslider-counter');
@@ -31,8 +38,8 @@
     var captionMetaText = document.getElementById('vslider-caption-meta-text');
     var captionLink = document.getElementById('vslider-caption-link');
 
-    var n = rows.length;
-    if (!n) return;
+    var n = originalRows.length;
+    if (n < 3) return;
 
     // Clinical Case Data (matches user wireframe text & clinic specialities)
     var casesData = [
@@ -74,48 +81,73 @@
       }
     ];
 
-    var currentIndex = 0;
-    var autoplayDuration = 4500;
-    var autoplayTimer = null;
-    var isPaused = false;
-    var reduceMotion = window.matchMedia &&
-                       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Build clones for circular infinite scrolling with 3 cards in view:
+    // Prepend clones of the last 2 items
+    // Append clones of the first 2 items
+    var CLONES_BEFORE = 2;
+    var CLONES_AFTER = 2;
 
-    function calculateOffset(index) {
-      if (!rows[0]) return 0;
-      var perView = 2;
-      var rowHeight = rows[0].offsetHeight;
-      var style = window.getComputedStyle(track);
-      var gap = parseFloat(style.rowGap || style.gap) || 10;
-      var step = rowHeight + gap;
+    var cloneBefore1 = originalRows[n - 2].cloneNode(true);
+    var cloneBefore2 = originalRows[n - 1].cloneNode(true);
+    cloneBefore1.classList.add('is-clone');
+    cloneBefore2.classList.add('is-clone');
+    track.insertBefore(cloneBefore2, track.firstChild);
+    track.insertBefore(cloneBefore1, track.firstChild);
 
-      // With 2 cards visible per view, scroll smoothly to show current card:
-      var maxScrollIndex = Math.max(0, n - perView);
-      var targetScroll = Math.max(0, Math.min(index, maxScrollIndex));
-      return targetScroll * step;
+    var cloneAfter1 = originalRows[0].cloneNode(true);
+    var cloneAfter2 = originalRows[1].cloneNode(true);
+    cloneAfter1.classList.add('is-clone');
+    cloneAfter2.classList.add('is-clone');
+    track.appendChild(cloneAfter1);
+    track.appendChild(cloneAfter2);
+
+    var allRows = Array.prototype.slice.call(track.querySelectorAll('.vslider__row'));
+
+    var currentLogicalIndex = 0; // 0 to n-1
+    var currentDomIndex = currentLogicalIndex + CLONES_BEFORE; // 2 to n+1
+    var isAnimating = false;
+
+    function isMobile() {
+      return window.innerWidth <= 768;
     }
 
-    function updateUI(instant) {
-      // 1. Vertical translation of the 3 visible image rows
-      var offset = calculateOffset(currentIndex);
-      if (instant) {
-        track.style.transition = 'none';
-        track.style.transform = 'translateY(-' + offset + 'px)';
-        track.offsetHeight; // force reflow
-        track.style.transition = '';
+    function getStep() {
+      if (!allRows[0]) return 160;
+      var style = window.getComputedStyle(track);
+      if (isMobile()) {
+        var rowW = allRows[0].offsetWidth;
+        var gapX = parseFloat(style.columnGap || style.gap) || 14;
+        return rowW + gapX;
       } else {
-        track.style.transform = 'translateY(-' + offset + 'px)';
+        var rowH = allRows[0].offsetHeight;
+        var gapY = parseFloat(style.rowGap || style.gap) || 12;
+        return rowH + gapY;
       }
+    }
 
-      // 2. Highlight active row
-      rows.forEach(function (row, i) {
-        var isActive = (i === currentIndex);
+    function calculateOffset(domIdx) {
+      var step = getStep();
+      if (isMobile()) {
+        // Horizontal 1-card peek slider:
+        // Card at domIdx sits at 0px from viewport start,
+        // Card domIdx + 1 peeks on the right
+        return domIdx * step;
+      } else {
+        // Vertical 3-card window: center card at domIdx
+        return (domIdx - 1) * step;
+      }
+    }
+
+    function updateActiveStates(targetDomIdx) {
+      allRows.forEach(function (row, idx) {
+        var isActive = (idx === targetDomIdx);
         row.classList.toggle('is-active', isActive);
         row.setAttribute('aria-selected', isActive ? 'true' : 'false');
       });
+    }
 
-      // 3. Update bottom caption box with subtle fade transition
-      var currentCase = casesData[currentIndex] || casesData[0];
+    function updateCaptionAndMeta(logicalIdx) {
+      var currentCase = casesData[logicalIdx] || casesData[0];
       if (captionContent) {
         captionContent.style.opacity = '0';
         captionContent.style.transform = 'translateY(4px)';
@@ -129,35 +161,109 @@
         }, 120);
       }
 
-      // 4. Update dots pagination
       dots.forEach(function (dot, i) {
-        var isActive = (i === currentIndex);
+        var isActive = (i === logicalIdx);
         dot.classList.toggle('is-active', isActive);
         dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
       });
 
-      // 5. Update header counter
       if (counterEl) {
-        var curStr = (currentIndex + 1 < 10 ? '0' : '') + (currentIndex + 1);
+        var curStr = (logicalIdx + 1 < 10 ? '0' : '') + (logicalIdx + 1);
         var totStr = (n < 10 ? '0' : '') + n;
         counterEl.textContent = curStr + ' / ' + totStr;
       }
     }
 
-    function goTo(index) {
-      currentIndex = ((index % n) + n) % n;
-      updateUI(false);
+    function setTrackTransform(domIdx, animated) {
+      var offset = calculateOffset(domIdx);
+      var transformVal = isMobile()
+        ? 'translateX(-' + offset + 'px)'
+        : 'translateY(-' + offset + 'px)';
+
+      if (!animated) {
+        track.style.transition = 'none';
+        track.style.transform = transformVal;
+        track.offsetHeight; // force reflow
+        track.style.transition = '';
+      } else {
+        track.style.transform = transformVal;
+      }
+      updateActiveStates(domIdx);
+    }
+
+    function slideTo(targetDomIdx, logicalIdx) {
+      if (isAnimating) return;
+      isAnimating = true;
+
+      currentDomIndex = targetDomIdx;
+      currentLogicalIndex = logicalIdx;
+
+      updateCaptionAndMeta(currentLogicalIndex);
+      setTrackTransform(currentDomIndex, true);
+
+      var onEnd = function () {
+        track.removeEventListener('transitionend', onEnd);
+        clearTimeout(fallbackTimeout);
+
+        // Snap back to real item if currently showing clone
+        if (currentDomIndex >= n + CLONES_BEFORE) {
+          currentDomIndex = currentDomIndex - n;
+          setTrackTransform(currentDomIndex, false);
+        } else if (currentDomIndex < CLONES_BEFORE) {
+          currentDomIndex = currentDomIndex + n;
+          setTrackTransform(currentDomIndex, false);
+        }
+
+        isAnimating = false;
+      };
+
+      var fallbackTimeout = setTimeout(onEnd, 600);
+      track.addEventListener('transitionend', onEnd);
     }
 
     function next() {
-      goTo(currentIndex + 1);
+      var targetDom = currentDomIndex + 1;
+      var targetLogical = (currentLogicalIndex + 1) % n;
+      slideTo(targetDom, targetLogical);
     }
 
     function prev() {
-      goTo(currentIndex - 1);
+      var targetDom = currentDomIndex - 1;
+      var targetLogical = (currentLogicalIndex - 1 + n) % n;
+      slideTo(targetDom, targetLogical);
     }
 
-    // Prev / Next button listeners
+    function goTo(logicalIdx) {
+      if (isAnimating || logicalIdx === currentLogicalIndex) return;
+      var targetDom = logicalIdx + CLONES_BEFORE;
+      slideTo(targetDom, logicalIdx);
+    }
+
+    // Attach click listeners to all rows in track:
+    allRows.forEach(function (row, idx) {
+      row.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (idx === currentDomIndex) {
+          // Center / active card clicked
+          var currentCase = casesData[currentLogicalIndex] || casesData[0];
+          window.location.hash = currentCase.link || '#gallery';
+        } else if (idx === currentDomIndex - 1) {
+          prev();
+        } else if (idx === currentDomIndex + 1) {
+          next();
+        } else {
+          var logical = (idx - CLONES_BEFORE + n) % n;
+          goTo(logical);
+        }
+      });
+      row.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          row.click();
+        }
+      });
+    });
+
     if (prevBtn) {
       prevBtn.addEventListener('click', function (e) {
         e.preventDefault();
@@ -174,21 +280,6 @@
       });
     }
 
-    // Clicking ANY of the image rows directly selects that case!
-    rows.forEach(function (row, i) {
-      row.addEventListener('click', function (e) {
-        e.preventDefault();
-        goTo(i);
-      });
-      row.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          goTo(i);
-        }
-      });
-    });
-
-    // Clicking pagination dots (wireframe dots)
     dots.forEach(function (dot, i) {
       dot.addEventListener('click', function (e) {
         e.preventDefault();
@@ -197,13 +288,12 @@
       });
     });
 
-    // Keyboard navigation
     if (viewport) {
       viewport.addEventListener('keydown', function (e) {
-        if (e.key === 'ArrowUp') {
+        if (e.key === 'ArrowUp' || (isMobile() && e.key === 'ArrowLeft')) {
           e.preventDefault();
           prev();
-        } else if (e.key === 'ArrowDown') {
+        } else if (e.key === 'ArrowDown' || (isMobile() && e.key === 'ArrowRight')) {
           e.preventDefault();
           next();
         } else if (e.key === 'Home') {
@@ -223,11 +313,10 @@
 
     if (viewport) {
       viewport.addEventListener('touchstart', function (e) {
-        if (e.touches.length !== 1) return;
+        if (!e.touches || e.touches.length !== 1) return;
         touchStartY = e.touches[0].clientY;
         touchStartX = e.touches[0].clientX;
         touchStartTime = Date.now();
-        pauseAutoplay();
       }, { passive: true });
 
       viewport.addEventListener('touchend', function (e) {
@@ -236,64 +325,40 @@
         var deltaX = e.changedTouches[0].clientX - touchStartX;
         var deltaTime = Date.now() - touchStartTime;
 
-        if (Math.abs(deltaY) > 30 && Math.abs(deltaY) > Math.abs(deltaX) && deltaTime < 550) {
-          if (deltaY < 0) {
-            next();
-          } else {
-            prev();
+        if (isMobile()) {
+          // Horizontal swipe on mobile
+          if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY) && deltaTime < 650) {
+            if (deltaX < 0) {
+              next();
+            } else {
+              prev();
+            }
+          }
+        } else {
+          // Vertical swipe on desktop/tablet
+          if (Math.abs(deltaY) > 30 && Math.abs(deltaY) > Math.abs(deltaX) && deltaTime < 550) {
+            if (deltaY < 0) {
+              next();
+            } else {
+              prev();
+            }
           }
         }
-        setTimeout(resumeAutoplay, 2500);
       }, { passive: true });
     }
 
-    // Autoplay controller (disabled for now)
-    var autoplayEnabled = false;
-
-    function startAutoplay() {
-      if (!autoplayEnabled || reduceMotion) return;
-      clearInterval(autoplayTimer);
-      autoplayTimer = setInterval(function () {
-        if (!isPaused) {
-          next();
-        }
-      }, autoplayDuration);
-    }
-
-    function pauseAutoplay() {
-      isPaused = true;
-    }
-
-    function resumeAutoplay() {
-      if (!autoplayEnabled) return;
-      isPaused = false;
-    }
-
-    // Pause on hover or focus
-    vslider.addEventListener('pointerenter', function (e) {
-      if (e.pointerType !== 'touch') pauseAutoplay();
-    });
-    vslider.addEventListener('pointerleave', function (e) {
-      if (e.pointerType !== 'touch') resumeAutoplay();
-    });
-    vslider.addEventListener('focusin', pauseAutoplay);
-    vslider.addEventListener('focusout', resumeAutoplay);
-
-    // Window resize handler to maintain vertical alignment
+    // Window resize handler to maintain proper alignment
     var resizeDebounce = null;
     window.addEventListener('resize', function () {
       clearTimeout(resizeDebounce);
       resizeDebounce = setTimeout(function () {
-        updateUI(true);
-      }, 100);
+        setTrackTransform(currentDomIndex, false);
+      }, 80);
     });
 
-    // Initial setup
-    updateUI(true);
-    // Auto sliding stopped for now
-    if (autoplayEnabled) {
-      startAutoplay();
-    }
+    // Initial setup: place card 0 in center
+    setTrackTransform(currentDomIndex, false);
+    updateCaptionAndMeta(currentLogicalIndex);
   })();
 
   /* =========================================================
@@ -443,15 +508,16 @@
   var lastFocusedEl = null;
 
   function openModal(card) {
-    var data = card.dataset;
+    if (!card) return;
+    var data = card.dataset || {};
     var isVideo = data.type === 'video';
 
-    modalCondition.textContent = data.condition;
-    modalTitle.textContent = data.title;
-    modalInfoTreatment.textContent = data.treatment;
-    modalInfoDuration.textContent = data.duration;
-    modalInfoAgeGroup.textContent = data.agegroup;
-    modalInfoDescription.textContent = data.description;
+    if (modalCondition) modalCondition.textContent = data.condition || '';
+    if (modalTitle) modalTitle.textContent = data.title || '';
+    if (modalInfoTreatment) modalInfoTreatment.textContent = data.treatment || '';
+    if (modalInfoDuration) modalInfoDuration.textContent = data.duration || '';
+    if (modalInfoAgeGroup) modalInfoAgeGroup.textContent = data.agegroup || '';
+    if (modalInfoDescription) modalInfoDescription.textContent = data.description || '';
 
     var beforeSrc = card.getAttribute('data-before') || '';
     var afterSrc = card.getAttribute('data-after') || '';
@@ -464,19 +530,19 @@
 
     if (modalImgBefore && beforeSrc) {
       modalImgBefore.src = beforeSrc;
-      modalImgBefore.alt = 'Before Treatment — ' + data.title;
+      modalImgBefore.alt = 'Before Treatment — ' + (data.title || '');
     }
     if (modalImgAfter && afterSrc) {
       modalImgAfter.src = afterSrc;
-      modalImgAfter.alt = 'After Result — ' + data.title;
+      modalImgAfter.alt = 'After Result — ' + (data.title || '');
     }
     if (modalThumbBefore && beforeSrc) {
       modalThumbBefore.src = beforeSrc;
-      modalThumbBefore.alt = 'Before Treatment — ' + data.title;
+      modalThumbBefore.alt = 'Before Treatment — ' + (data.title || '');
     }
     if (modalThumbAfter && afterSrc) {
       modalThumbAfter.src = afterSrc;
-      modalThumbAfter.alt = 'After Result — ' + data.title;
+      modalThumbAfter.alt = 'After Result — ' + (data.title || '');
     }
     if (modalSlider) {
       modalSlider.style.setProperty('--pos', '50%');
@@ -489,19 +555,20 @@
       }
     }
 
-    modalVideoLabel.textContent = data.videolabel || '';
+    if (modalVideoLabel) modalVideoLabel.textContent = data.videolabel || '';
 
     currentTabs = isVideo ? ['video', 'photos', 'info'] : ['photos', 'info'];
     buildTabs();
     setActiveTab(isVideo ? 'video' : 'photos');
 
     lastFocusedEl = document.activeElement;
-    modal.hidden = false;
-    modalClose.focus();
+    if (modal) modal.hidden = false;
+    if (modalClose) modalClose.focus();
     document.addEventListener('keydown', onModalKeydown);
   }
 
   function buildTabs() {
+    if (!modalTabs) return;
     modalTabs.innerHTML = '';
     currentTabs.forEach(function (tab) {
       var btn = document.createElement('button');
@@ -514,16 +581,18 @@
   }
 
   function setActiveTab(tab) {
-    modalTabs.querySelectorAll('button').forEach(function (btn) {
-      btn.classList.toggle('is-active', btn.getAttribute('data-tab') === tab);
-    });
-    modalPanelPhotos.hidden = tab !== 'photos';
-    modalPanelVideo.hidden = tab !== 'video';
-    modalPanelInfo.hidden = tab !== 'info';
+    if (modalTabs) {
+      modalTabs.querySelectorAll('button').forEach(function (btn) {
+        btn.classList.toggle('is-active', btn.getAttribute('data-tab') === tab);
+      });
+    }
+    if (modalPanelPhotos) modalPanelPhotos.hidden = tab !== 'photos';
+    if (modalPanelVideo) modalPanelVideo.hidden = tab !== 'video';
+    if (modalPanelInfo) modalPanelInfo.hidden = tab !== 'info';
   }
 
   function closeModal() {
-    modal.hidden = true;
+    if (modal) modal.hidden = true;
     document.removeEventListener('keydown', onModalKeydown);
     if (lastFocusedEl) lastFocusedEl.focus();
   }
