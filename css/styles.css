@@ -807,6 +807,7 @@ button {
   color: #241F1D;
   width: 100%;
   padding: 24px 0;
+  padding-top: 10px;
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-x: clip;
@@ -816,7 +817,7 @@ button {
    Left column — copy
    -------------------------------------------------------------------------- */
 .hero__content {
-  padding: 24px 40px 24px 64px;
+  padding: 24px 35px 24px 64px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -893,7 +894,7 @@ button {
    -------------------------------------------------------------------------- */
 .hero__media {
   position: relative;
-  padding: 16px 48px 16px 20px;
+  padding: 0 48px 16px 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -911,38 +912,39 @@ button {
 }
 
 .hero-vslider {
-  --vslider-rows-visible: 3;
-  --vslider-gap: 12px;
-  --vslider-padding-y: 10px;
-  --vslider-viewport-height: 520px;
-  --vslider-row-height: calc((var(--vslider-viewport-height) - (2 * var(--vslider-padding-y)) - ((var(--vslider-rows-visible) - 1) * var(--vslider-gap))) / var(--vslider-rows-visible));
+  --vslider-viewport-height: 410px;
+  --vslider-card-width: 405px;
+  --vslider-card-height: 270px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
-  max-width: 530px;
+  max-width: 450px;
   margin: 0 auto;
 }
 
 @media (min-width: 1366px) {
   .hero-vslider {
-    --vslider-viewport-height: 540px;
-    --vslider-gap: 12px;
-    max-width: 620px;
+    --vslider-viewport-height: 425px;
+    --vslider-card-width: 420px;
+    --vslider-card-height: 280px;
+    max-width: 470px;
   }
 }
 
 @media (min-width: 1536px) {
   .hero-vslider {
-    --vslider-viewport-height: 570px;
-    --vslider-gap: 12px;
-    max-width: 640px;
+    --vslider-viewport-height: 440px;
+    --vslider-card-width: 435px;
+    --vslider-card-height: 290px;
+    max-width: 490px;
   }
 }
 
 /* Header bar with title and counter */
 .vslider__header {
-  display: flex;
+  /* display: flex; */
+  display: none;
   align-items: center;
   justify-content: space-between;
   padding: 2px 4px;
@@ -999,78 +1001,97 @@ button {
   user-select: none;
 }
 
-/* Top Section: Viewport for 3 image rows (Wireframe Upper Box) */
+/* Top Section: Viewport for layered card stack */
 .vslider__viewport {
   position: relative;
   width: 100%;
   height: var(--vslider-viewport-height);
   border-radius: 20px;
   overflow: hidden;
-  /* background: #1A1614; */
-  /* box-shadow: 0 16px 36px -12px rgba(36, 31, 29, 0.14), 0 0 0 1px rgba(124, 35, 52, 0.12); */
   outline: none;
-  padding: var(--vslider-padding-y) 12px;
+  padding: 0;
 }
 
 .vslider__viewport:focus-visible {
-  box-shadow: 0 16px 36px -12px rgba(36, 31, 29, 0.14), 0 0 0 2px #7C2334;
+  box-shadow: 0 0 0 2px #7C2334;
 }
 
-/* Vertical track containing all image rows */
+/* Track containing all image rows */
 .vslider__track {
-  display: flex;
-  flex-direction: column;
-  gap: var(--vslider-gap);
-  width: 100%;
   position: relative;
-  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform;
-  padding-inline: 40px;
+  width: 100%;
+  height: 100%;
+  padding-inline: 0;
+  display: block;
 }
 
-/* Individual Image Row (3 visible, center colored/forward, top & bottom B&W/behind) */
+/* Individual Card (3:2 ratio) */
 .vslider__row {
-  position: relative;
-  height: var(--vslider-row-height);
-  flex: 0 0 var(--vslider-row-height);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--vslider-card-width);
+  height: var(--vslider-card-height);
   aspect-ratio: 3 / 2;
-  border-radius: 14px;
+  border-radius: 18px;
   overflow: hidden;
   cursor: pointer;
   border: 2px solid transparent;
+  background: #241F1D;
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     filter 0.45s ease,
     opacity 0.45s ease,
     border-color 0.45s ease;
-  background: #241F1D;
-  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.85);
+  z-index: 0;
 }
 
-/* Top & Bottom: behind, black/white, scaled down */
-.vslider__row:not(.is-active) {
-  opacity: 0.55;
-  filter: grayscale(100%) brightness(0.75);
-  transform: scale(0.94);
-  z-index: 1;
-  border-color: rgba(255, 255, 255, 0.06);
-}
-
-.vslider__row:not(.is-active):hover {
-  opacity: 0.8;
-  filter: grayscale(40%) brightness(0.9);
-  transform: scale(0.97);
+/* TOP CARD (Previous): Behind center card, grayscale, clearly visible */
+.vslider__row.is-prev {
+  opacity: 0.7;
+  filter: grayscale(100%) brightness(0.8);
+  transform: translate(-50%, calc(-50% - 82px)) scale(0.92);
   z-index: 2;
+  pointer-events: auto;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
 }
 
-/* Center card: coloured, placed forward, deep shadow */
+.vslider__row.is-prev:hover {
+  opacity: 0.9;
+  filter: grayscale(35%) brightness(0.9);
+  transform: translate(-50%, calc(-50% - 86px)) scale(0.94);
+}
+
+/* BOTTOM CARD (Next): Behind center card, grayscale, clearly visible */
+.vslider__row.is-next {
+  opacity: 0.7;
+  filter: grayscale(100%) brightness(0.8);
+  transform: translate(-50%, calc(-50% + 82px)) scale(0.92);
+  z-index: 2;
+  pointer-events: auto;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
+}
+
+.vslider__row.is-next:hover {
+  opacity: 0.9;
+  filter: grayscale(35%) brightness(0.9);
+  transform: translate(-50%, calc(-50% + 86px)) scale(0.94);
+}
+
+/* CENTER CARD (Active / In Focus): In front, full color, prominent shadow */
 .vslider__row.is-active {
   opacity: 1;
   filter: grayscale(0%) brightness(1);
+  transform: translate(-50%, -50%) scale(1.0);
   border-color: #7C2334;
-  box-shadow: 0 18px 42px -6px rgba(0, 0, 0, 0.65), 0 0 0 2px #7C2334;
-  transform: scale(1.04);
+  box-shadow: 0 18px 42px -6px rgba(0, 0, 0, 0.6), 0 0 0 2px #7C2334;
   z-index: 5;
+  pointer-events: auto;
 }
 
 .vslider__row-img {
@@ -1082,11 +1103,12 @@ button {
   display: block;
   user-select: none;
   -webkit-user-drag: none;
+  border-radius: 16px;
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.vslider__row:hover .vslider__row-img {
-  transform: scale(1.04);
+.vslider__row.is-active:hover .vslider__row-img {
+  transform: scale(1.03);
 }
 
 .vslider__row-badge-pill {
@@ -1152,7 +1174,8 @@ button {
   flex-direction: column;
   gap: 3px;
   transition: all 0.3s ease;
-  margin-inline: 35px;
+  width: var(--vslider-card-width);
+  margin: 6px auto 0;
 }
 
 .vslider__caption-box:hover {
@@ -2839,9 +2862,8 @@ button {
   }
 
   .hero-vslider {
-    --vslider-viewport-height: 480px;
     --vslider-gap: 10px;
-    max-width: 490px;
+    max-width: 480px;
   }
 }
 
@@ -2881,9 +2903,8 @@ button {
   }
 
   .hero-vslider {
-    --vslider-viewport-height: 460px;
     --vslider-gap: 8px;
-    max-width: 450px;
+    max-width: 440px;
   }
 
   .vslider__caption-title {
@@ -2997,6 +3018,9 @@ button {
 
   /* Individual card: 1 per slide, with dark background & rounded corners */
   .vslider__row {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
     flex: 0 0 calc(100vw - 64px) !important;
     max-width: 360px !important;
     width: calc(100vw - 64px) !important;
@@ -3016,6 +3040,17 @@ button {
     cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
+    pointer-events: auto !important;
+  }
+
+  .vslider__row.is-prev,
+  .vslider__row.is-next {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
   }
 
   /* Image inside card: fully shown without any cropping */

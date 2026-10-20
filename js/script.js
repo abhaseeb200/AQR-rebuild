@@ -128,20 +128,24 @@
     function calculateOffset(domIdx) {
       var step = getStep();
       if (isMobile()) {
-        // Horizontal 1-card peek slider:
-        // Card at domIdx sits at 0px from viewport start,
-        // Card domIdx + 1 peeks on the right
         return domIdx * step;
       } else {
-        // Vertical 3-card window: center card at domIdx
-        return (domIdx - 1) * step;
+        var viewportH = viewport.clientHeight;
+        var rowH = allRows[0] ? allRows[0].offsetHeight : 270;
+        var centerOffset = (viewportH - rowH) / 2;
+        return domIdx * step - centerOffset;
       }
     }
 
     function updateActiveStates(targetDomIdx) {
       allRows.forEach(function (row, idx) {
         var isActive = (idx === targetDomIdx);
+        var isPrev = (idx === targetDomIdx - 1);
+        var isNext = (idx === targetDomIdx + 1);
+
         row.classList.toggle('is-active', isActive);
+        row.classList.toggle('is-prev', isPrev);
+        row.classList.toggle('is-next', isNext);
         row.setAttribute('aria-selected', isActive ? 'true' : 'false');
       });
     }
@@ -175,18 +179,20 @@
     }
 
     function setTrackTransform(domIdx, animated) {
-      var offset = calculateOffset(domIdx);
-      var transformVal = isMobile()
-        ? 'translateX(-' + offset + 'px)'
-        : 'translateY(-' + offset + 'px)';
+      if (isMobile()) {
+        var offset = calculateOffset(domIdx);
+        var transformVal = 'translateX(-' + offset + 'px)';
 
-      if (!animated) {
-        track.style.transition = 'none';
-        track.style.transform = transformVal;
-        track.offsetHeight; // force reflow
-        track.style.transition = '';
+        if (!animated) {
+          track.style.transition = 'none';
+          track.style.transform = transformVal;
+          track.offsetHeight; // force reflow
+          track.style.transition = '';
+        } else {
+          track.style.transform = transformVal;
+        }
       } else {
-        track.style.transform = transformVal;
+        track.style.transform = 'none';
       }
       updateActiveStates(domIdx);
     }
